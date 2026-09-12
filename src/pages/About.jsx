@@ -28,8 +28,31 @@ export default function About() {
       <section className="section">
         <div className="container">
           <div className="about-grid">
-            <div className="about-image-wrap">
-              <img src="/assets/images/spiritual_remedies.jpg" alt="Vedic Altar and Spiritual Remedies" />
+            <div className="about-image-wrap" style={{ textAlign: 'center' }}>
+              <img
+                src="/assets/images/logo.jpg"
+                alt="Astrologer Sanjeev Naryani - Naryani Astro"
+                style={{
+                  borderRadius: '50%',
+                  maxWidth: '340px',
+                  width: '100%',
+                  margin: '0 auto',
+                  border: '3px solid var(--gold-primary)',
+                  boxShadow: '0 0 40px rgba(212, 175, 55, 0.45)',
+                  display: 'block',
+                }}
+              />
+              <div style={{ marginTop: '1.5rem', textAlign: 'center' }}>
+                <h3 style={{ fontFamily: 'var(--font-serif)', color: 'var(--gold-light)', fontSize: '1.45rem', marginBottom: '0.25rem' }}>
+                  Sanjeev Naryani
+                </h3>
+                <p style={{ color: 'var(--text-gold)', fontSize: '0.85rem', letterSpacing: '0.08em', fontWeight: '600', textTransform: 'uppercase' }}>
+                  KNOW • ALIGN • TRANSFORM
+                </p>
+                <p style={{ color: 'var(--text-muted)', fontSize: '0.82rem', marginTop: '0.35rem' }}>
+                  Vedic Astrology • Lal Kitab • BNN • Numerology • Palmistry • Vastu
+                </p>
+              </div>
             </div>
 
             <div className="about-content-block">

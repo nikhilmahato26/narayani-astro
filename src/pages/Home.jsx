@@ -352,8 +352,20 @@ _I would like to confirm my worldwide online consultation slot._`;
       <section className="section" id="about">
         <div className="container">
           <div className="about-grid">
-            <div className="about-image-wrap">
-              <img src="/assets/images/spiritual_remedies.jpg" alt="Spiritual Vedic Altar and Remedies" />
+            <div className="about-image-wrap" style={{ textAlign: 'center' }}>
+              <img
+                src="/assets/images/logo.jpg"
+                alt="Astrologer Sanjeev Naryani - Naryani Astro"
+                style={{
+                  borderRadius: '50%',
+                  maxWidth: '380px',
+                  width: '100%',
+                  margin: '0 auto',
+                  border: '3px solid var(--gold-primary)',
+                  boxShadow: '0 0 45px rgba(212, 175, 55, 0.45)',
+                  display: 'block'
+                }}
+              />
               <div className="about-floating-stat">
                 <div className="about-stat-number">100%</div>
                 <div className="about-stat-label">Personalized Guidance</div>

@@ -50,8 +50,8 @@ export default function Navbar() {
       {/* Main Sticky Header */}
       <header className={`site-header ${isScrolled ? 'scrolled' : ''}`}>
         <div className="container nav-container">
-          <Link to="/" className="brand-logo-wrap" title="Naryani Astro Home">
-            <img src="/assets/images/logo.jpg" alt="Naryani Astro Sacred Mandala Logo" className="brand-logo-img" />
+          <Link to="/" className="brand-logo-wrap" title="Naryani Astro - Sanjeev Naryani">
+            <img src="/assets/images/logo.jpg" alt="Naryani Astro Logo" className="brand-logo-img" />
             <div className="brand-text-block">
               <span className="brand-name">Naryani Astro</span>
               <span className="brand-tagline">Ancient Wisdom • Modern Solutions</span>
@@ -62,12 +62,61 @@ export default function Navbar() {
           <nav className="nav-menu" aria-label="Main Navigation">
             <NavLink to="/" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} end>Home</NavLink>
             <NavLink to="/about" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>About</NavLink>
-            <NavLink to="/services" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>Services</NavLink>
+
+            {/* Services Dropdown */}
+            <div className="nav-item-dropdown">
+              <NavLink to="/services" className={({ isActive }) => `nav-link dropdown-toggle ${isActive ? 'active' : ''}`}>
+                <span>Services</span>
+                <span className="dropdown-arrow">▾</span>
+              </NavLink>
+              <div className="nav-dropdown-menu">
+                <Link to="/services" className="nav-dropdown-item">
+                  <span className="nav-dropdown-icon">🔮</span>
+                  <div className="nav-dropdown-text">
+                    <span className="nav-dropdown-title">All Services</span>
+                    <span className="nav-dropdown-desc">Complete overview of astrological offerings</span>
+                  </div>
+                </Link>
+                <Link to="/lal-kitab" className="nav-dropdown-item">
+                  <span className="nav-dropdown-icon">📕</span>
+                  <div className="nav-dropdown-text">
+                    <span className="nav-dropdown-title">Lal Kitab Guidance</span>
+                    <span className="nav-dropdown-desc">Karmic debt analysis & effortless upaye</span>
+                  </div>
+                </Link>
+                <Link to="/remedies" className="nav-dropdown-item">
+                  <span className="nav-dropdown-icon">🌿</span>
+                  <div className="nav-dropdown-text">
+                    <span className="nav-dropdown-title">Astro Remedies</span>
+                    <span className="nav-dropdown-desc">Vedic pooja, planetary cures & mantras</span>
+                  </div>
+                </Link>
+                <Link to="/numerology" className="nav-dropdown-item">
+                  <span className="nav-dropdown-icon">🔢</span>
+                  <div className="nav-dropdown-text">
+                    <span className="nav-dropdown-title">Numerology</span>
+                    <span className="nav-dropdown-desc">Name correction, life path & lucky numbers</span>
+                  </div>
+                </Link>
+                <Link to="/gemology" className="nav-dropdown-item">
+                  <span className="nav-dropdown-icon">💎</span>
+                  <div className="nav-dropdown-text">
+                    <span className="nav-dropdown-title">Gemology</span>
+                    <span className="nav-dropdown-desc">Natural energised gemstones & rings</span>
+                  </div>
+                </Link>
+                <Link to="/vastu" className="nav-dropdown-item">
+                  <span className="nav-dropdown-icon">🧭</span>
+                  <div className="nav-dropdown-text">
+                    <span className="nav-dropdown-title">Vastu Shastra</span>
+                    <span className="nav-dropdown-desc">Harmonizing energies for home & office</span>
+                  </div>
+                </Link>
+              </div>
+            </div>
+
             <NavLink to="/lal-kitab" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>Lal Kitab</NavLink>
-            <NavLink to="/remedies" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>Astro Remedies</NavLink>
-            <NavLink to="/numerology" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>Numerology</NavLink>
-            <NavLink to="/gemology" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>Gemology</NavLink>
-            <NavLink to="/vastu" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>Vastu</NavLink>
+            <NavLink to="/remedies" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>Remedies</NavLink>
             <NavLink to="/testimonials" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>Testimonials</NavLink>
             <NavLink to="/contact" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>Contact</NavLink>
           </nav>
@@ -81,14 +130,14 @@ export default function Navbar() {
               className="btn btn-whatsapp btn-sm btn-shimmer"
               title="Chat on WhatsApp"
             >
-              <span>💬</span> <span>WhatsApp</span>
+              <span className="btn-icon">💬</span> <span className="btn-text">WhatsApp</span>
             </a>
             <button
               type="button"
               className="btn btn-primary btn-sm btn-shimmer"
               onClick={() => openBookingModal('General Consultation')}
             >
-              <span>📅</span> <span>Book Consultation</span>
+              <span className="btn-icon">📅</span> <span className="btn-text">Book Now</span>
             </button>
             <button
               type="button"
