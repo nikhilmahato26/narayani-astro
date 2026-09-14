@@ -2,126 +2,13 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useBooking } from '../context/BookingContext';
 
-const NUMEROLOGY_DATA = {
-  1: {
-    title: "Number 1: The Pioneer & Natural Leader",
-    ruler: "Sun (Surya)",
-    traits: "Independent, visionary, ambitious, and self-motivated. You possess raw leadership power, originality of thought, and the drive to pioneer breakthrough paths.",
-    advice: "Harness your natural confidence while practicing patience and collaborative empathy in relationships."
-  },
-  2: {
-    title: "Number 2: The Diplomat & Intuitive Harmonizer",
-    ruler: "Moon (Chandra)",
-    traits: "Deeply empathetic, peace-seeking, gentle, and intuitively attuned to subtle energies. You bring balance, diplomacy, and emotional depth into every environment.",
-    advice: "Protect your emotional boundaries and trust your profound inner instincts when making crucial decisions."
-  },
-  3: {
-    title: "Number 3: The Creative Visionary & Joyous Communicator",
-    ruler: "Jupiter (Brihaspati / Guru)",
-    traits: "Expressive, radiant, artistic, and spiritually optimistic. You possess the gift of uplifting others through words, creative arts, and contagious enthusiasm.",
-    advice: "Channel your multifaceted creative talents into disciplined goals to materialize substantial achievements."
-  },
-  4: {
-    title: "Number 4: The Master Architect & Pillar of Stability",
-    ruler: "Rahu / Uranus",
-    traits: "Methodical, deeply dependable, hardworking, and grounded in pragmatism. You excel at turning chaotic concepts into structured, lasting realities.",
-    advice: "Cultivate flexibility in the face of sudden changes and welcome innovative viewpoints without fear."
-  },
-  5: {
-    title: "Number 5: The Dynamic Catalyst & Free Spirit",
-    ruler: "Mercury (Budha)",
-    traits: "Versatile, curious, adventurous, and magnetic. You thrive amidst transformation, progressive movement, global travel, and spontaneous exploration.",
-    advice: "Anchor your restless energy with grounding spiritual rituals and mindful routines for enduring success."
-  },
-  6: {
-    title: "Number 6: The Nurturer & Cosmic Harmonizer",
-    ruler: "Venus (Shukra)",
-    traits: "Loving, responsible, aesthetically attuned, and deeply protective of loved ones. You are born with a heart centered on family, harmony, and healing.",
-    advice: "Give yourself the unconditional kindness and rest you so generously bestow upon everyone else."
-  },
-  7: {
-    title: "Number 7: The Mystical Truth Seeker & Philosopher",
-    ruler: "Ketu / Neptune",
-    traits: "Introspective, analytical, deeply spiritual, and drawn to occult mysteries. You seek the foundational truth behind existence and possess penetrating intuition.",
-    advice: "Balance solitary reflection with open emotional connection to grounded companions in your journey."
-  },
-  8: {
-    title: "Number 8: The Powerful Manifestor & Karmic Executive",
-    ruler: "Saturn (Shani)",
-    traits: "Authoritative, resilient, mastery over material and spiritual realms, and karmically driven. You understand perseverance, discipline, and building generational legacy.",
-    advice: "Maintain absolute ethical integrity in all pursuits to receive the bountiful blessings of karmic equilibrium."
-  },
-  9: {
-    title: "Number 9: The Universal Humanitarian & Soul Healer",
-    ruler: "Mars (Mangal)",
-    traits: "Compassionate, selfless, globally conscious, and spiritually evolved. You carry wisdom from all past life cycles with profound generosity and wisdom.",
-    advice: "Release attachments to past disappointments gracefully and focus on uplifting collective consciousness."
-  },
-  11: {
-    title: "Master Number 11: The Cosmic Illuminator & Seer",
-    ruler: "High Octane Moon / Neptune",
-    traits: "Extraordinary intuitive gifts, spiritual conduit, visionary ideals, and deep empathy. You bridge high cosmic dimensions with earthly wisdom.",
-    advice: "Ground your intense nervous energy with meditation and express your divine revelations through guidance."
-  },
-  22: {
-    title: "Master Number 22: The Master Builder of Empires",
-    ruler: "High Octane Rahu / Uranus",
-    traits: "The power to materialize grand humanitarian visions into tangible world-changing institutions, infrastructure, and enduring frameworks.",
-    advice: "Stay steadfast in faith even when challenges appear monumental; your destiny carries vast responsibilities."
-  },
-  33: {
-    title: "Master Number 33: The Master Spiritual Guide & Avatar",
-    ruler: "High Octane Jupiter / Venus",
-    traits: "The highest octave of selfless devotion, unconditional love, and spiritual enlightenment for humanity's collective healing.",
-    advice: "Maintain sacred self-care while serving as a compassionate lighthouse for seeking souls across the globe."
-  }
-};
-
-function calculateLifePath(dateString) {
-  if (!dateString) return null;
-  const parts = dateString.split('-');
-  if (parts.length !== 3) return null;
-
-  const year = parts[0];
-  const month = parts[1];
-  const day = parts[2];
-
-  function reduceNum(val) {
-    let sum = 0;
-    for (let char of String(val)) {
-      sum += parseInt(char, 10);
-    }
-    if (sum === 11 || sum === 22 || sum === 33) return sum;
-    if (sum > 9) return reduceNum(sum);
-    return sum;
-  }
-
-  const redDay = reduceNum(day);
-  const redMonth = reduceNum(month);
-  const redYear = reduceNum(year);
-
-  const totalSum = redDay + redMonth + redYear;
-  if (totalSum === 11 || totalSum === 22 || totalSum === 33) {
-    return totalSum;
-  }
-  return reduceNum(totalSum);
-}
-
 export default function Home() {
   const { openBookingModal, showToast } = useBooking();
 
-  // Remedies Tab State
-  const [activeRemedyFilter, setActiveRemedyFilter] = useState('all');
+  // Bio Modal State
+  const [isBioModalOpen, setIsBioModalOpen] = useState(false);
 
-  // Numerology Calculator State
-  const [numName, setNumName] = useState('');
-  const [numDob, setNumDob] = useState('1995-08-15');
-  const [calcResult, setCalcResult] = useState(() => {
-    const defaultNum = calculateLifePath('1995-08-15');
-    return { number: defaultNum, ...NUMEROLOGY_DATA[defaultNum] };
-  });
-
-  // FAQ Accordion State
+  // FAQ Accordion State (0 opens first FAQ by default)
   const [activeFaq, setActiveFaq] = useState(0);
 
   // Quick Home Form State
@@ -130,93 +17,181 @@ export default function Home() {
     phone: '',
     email: '',
     country: '',
-    service: 'Lal Kitab Consultation',
+    service: 'Career & Executive Guidance',
     dob: '',
     time: '',
     place: '',
     message: ''
   });
 
-  const handleNumCalculate = (e) => {
-    e.preventDefault();
-    if (!numDob) {
-      showToast('Please select your date of birth.');
-      return;
-    }
-    const num = calculateLifePath(numDob);
-    const data = NUMEROLOGY_DATA[num] || NUMEROLOGY_DATA[1];
-    setCalcResult({ number: num, ...data });
-    showToast(`Life Path Number ${num} calculated!`);
-  };
-
   const handleHomeFormSubmit = (e) => {
     e.preventDefault();
     const waMessage = 
 `*🌟 Online Astrology Consultation Booking — Naryani Astro 🌟*
-• *Name:* ${homeForm.name || 'Not Provided'}
-• *Phone:* ${homeForm.phone || 'Not Provided'}
+• *Client Name:* ${homeForm.name || 'Not Provided'}
+• *Phone / WhatsApp:* ${homeForm.phone || 'Not Provided'}
 • *Email:* ${homeForm.email || 'Not Provided'}
-• *Country:* ${homeForm.country || 'India / Worldwide'}
+• *Country of Residence:* ${homeForm.country || 'India / Worldwide'}
 • *Consultation Type:* ${homeForm.service}
 • *Date of Birth:* ${homeForm.dob || 'Not Provided'}
-• *Birth Time:* ${homeForm.time || 'Not Provided'}
-• *Birth Place:* ${homeForm.place || 'Not Provided'}
-• *Specific Questions / Concerns:* ${homeForm.message || 'General Consultation'}
+• *Exact Birth Time:* ${homeForm.time || 'Not Provided'}
+• *Place of Birth:* ${homeForm.place || 'Not Provided'}
+• *Core Questions / Concerns:* ${homeForm.message || 'General Guidance'}
 
-_I would like to confirm my worldwide online consultation slot._`;
+_I would like to confirm my consultation slot with Sanjeev Naryani._`;
 
     const waUrl = `https://wa.me/919619885158?text=${encodeURIComponent(waMessage)}`;
     showToast('Redirecting to WhatsApp with your consultation details...');
     setTimeout(() => {
       window.open(waUrl, '_blank');
-    }, 600);
+    }, 500);
   };
 
-  const remediesData = [
-    { id: 'relationships', category: 'relationships', icon: '❤️', title: 'Relationships & Love', desc: 'Heal misunderstandings, emotional distance, and compatibility friction by balancing Venus (Shukra), Moon (Chandra), and 7th house planetary transits.', tag: 'Venus & Moon Remedies' },
-    { id: 'career', category: 'career', icon: '💼', title: 'Career & Job Growth', desc: 'Overcome stagnation, lack of recognition, job insecurity, or uncertain career switches through targeted Sun, Saturn, and 10th house remedies.', tag: 'Sun & Saturn Alignment' },
-    { id: 'marriage', category: 'marriage', icon: '💍', title: 'Marriage & Kundli Milan', desc: 'Remedies for delays in finding a suitable spouse, Manglik Dosh pacification, post-marital friction, and comprehensive 36-Guna Kundli matching.', tag: 'Jupiter & Mangal Upaye' },
-    { id: 'children', category: 'children', icon: '👶', title: 'Children & Education', desc: 'Guidance for couples anticipating progeny (Santan Sukh), student concentration enhancements, and career stream selection using the 5th house and Jupiter.', tag: '5th House & Jupiter Upaye' },
-    { id: 'disputes', category: 'disputes', icon: '⚖️', title: 'Legal & Personal Disputes', desc: 'Protective Lal Kitab and Mars remedies to alleviate chronic litigation, court battles, property conflicts, and unwanted rivalries.', tag: 'Mars & 6th House Neutralization' },
-    { id: 'financial', category: 'financial', icon: '💰', title: 'Financial & Debt Relief', desc: 'Resolve persistent financial drain, unrecovered business funds, and debt traps by strengthening the 2nd and 11th houses with auspicious upaye.', tag: 'Dhan Bhava Alignment' },
-    { id: 'family', category: 'family', icon: '🏠', title: 'Home & Family Harmony', desc: 'Dispel persistent discord, emotional tension, and negative domestic aura by combining Lal Kitab domestic remedies with subtle Vastu adjustments.', tag: '4th House & Moon Balancing' },
-    { id: 'doshas', category: 'doshas', icon: '🪐', title: 'Planetary Doshas', desc: 'Dedicated, compassionate remedies for Kaal Sarp Dosh, Pitra Dosh, Sade Sati, Shani Dhaiya, and affliction caused by Rahu-Ketu axis.', tag: 'Safe Dosh Pacification' }
-  ];
-
-  const filteredRemedies = activeRemedyFilter === 'all'
-    ? remediesData
-    : remediesData.filter(r => r.category === activeRemedyFilter);
-
+  // 7 SMART FAQS AS SPECIFIED BY USER
   const faqs = [
     {
-      q: 'How do I book an online consultation?',
-      a: 'Booking is very simple and instant. You can click the WhatsApp button anywhere on our website to message us directly at +91 9619885158, or submit the consultation booking form on this page. Our team will promptly confirm your appointment slot and share session details.'
+      q: 'What happens during a consultation?',
+      a: 'In your dedicated one-on-one session, Sanjeev Naryani conducts an in-depth analysis of your Janma Kundli (birth chart), planetary dashas, and current transits. Combining traditional astrological wisdom with 42 years of executive corporate experience, he evaluates your real-world circumstances, listens to your specific concerns, and provides clear, pragmatic guidance alongside simple Vedic and Lal Kitab remedies.'
     },
     {
-      q: 'Do you provide worldwide consultations?',
-      a: 'Yes, absolutely. Naryani Astro specializes in worldwide online astrology consultations. We regularly consult with clients across India, USA, UK, UAE, Canada, Australia, Singapore, and Europe via WhatsApp voice call, video call, or detailed audio reports according to your time zone.'
+      q: 'What information do I need?',
+      a: 'To generate an accurate astrological birth chart, you only need three core details: (1) Your Date of Birth, (2) Exact Time of Birth (with AM/PM), and (3) Place of Birth (City, State, Country). For Numerology consultations, your full name and date of birth are required. For Vastu inquiries, a simple layout or directional floor plan is helpful.'
     },
     {
-      q: 'What details are required for an accurate reading?',
-      a: 'To generate an accurate Vedic Kundli and Lal Kitab horoscope, we require: (1) Full Name, (2) Date of Birth (DD/MM/YYYY), (3) Exact Time of Birth (with AM/PM), and (4) City & Country of Birth. If you are inquiring about numerology or Vastu, relevant details like full name spelling or floor plans will be requested.'
+      q: 'How long is the consultation?',
+      a: 'Consultations are unhurried and comprehensive, typically lasting 30 to 45 minutes. This provides ample time to analyze your chart thoroughly, address your core questions across career, business, marriage, or family, and clearly explain all recommended remedies and timelines.'
     },
     {
-      q: 'Is WhatsApp consultation available?',
-      a: 'Yes, WhatsApp is our primary communication channel. You can message, send your birth details, and conduct your consultation session conveniently via WhatsApp chat, voice note, or voice call at +91 9619885158.'
+      q: 'Is the consultation online?',
+      a: 'Yes, 100% online across India and worldwide. Consultations are conducted seamlessly via WhatsApp voice call, video call, or phone according to your preferred schedule, accommodating time zones across India (IST), the US (EST/PST), UK (GMT), UAE (GST), Canada, and Australia.'
     },
     {
-      q: 'Which astrology services do you provide?',
-      a: 'We provide end-to-end guidance across six core disciplines: Lal Kitab Horoscope Reading & Upaye, Classical Vedic Astrology, Numerology Analysis, Gemology (Gemstone selection & wearing protocol), Vastu Shastra Consultation (Home & Business), and personalized Astro Remedies for life challenges.'
+      q: 'What subjects can I discuss?',
+      a: 'You have complete freedom to discuss any sphere of life: career growth, corporate transitions, executive decisions, business partnerships and investments, marriage timing, relationship compatibility (Kundli Milan), family disputes, financial stabilization, home/office Vastu, or personal decisions at major life crossroads.'
     },
     {
-      q: 'How are remedies provided? Are they expensive or complicated?',
-      a: 'All remedies are personalized and tailored strictly to your individual chart. We prioritize simple, practical, everyday upaye (such as planetary color harmony, dietary adjustments, specific non-harmful charity, and gentle water rituals) that anyone can perform without heavy expenditure or superstitious fear.'
+      q: 'Do you provide remedies?',
+      a: 'Yes. Every consultation includes personalized Astro-Remedies that are a perfect blend of Vedic principles, Lal Kitab upaye, and Numerology. All remedies are ethical, practical, and non-ritualistic—focusing on everyday actions, color alignments, dietary adjustments, and positive habits rather than expensive ceremonies or superstition.'
+    },
+    {
+      q: 'Can you help with career/business decisions?',
+      a: 'Absolutely. This is a hallmark strength of Sanjeev Naryani. With 42 years of corporate banking and top executive leadership experience—including serving as Managing Director & CEO of a premier Indian company—he combines deep astrological insight with executive acumen. He understands organizational dynamics, executive career transitions, business risks, and strategic timing like few astrologers can.'
+    }
+  ];
+
+  // 6 AREAS I HELP WITH
+  const guidanceAreas = [
+    {
+      icon: '💼',
+      title: 'Career & Executive Decisions',
+      desc: 'Clarity on promotions, job switches, corporate dilemmas, industry pivots, and navigating complex organizational dynamics with planetary dasha alignment.',
+      tag: 'Sun & Saturn Alignment'
+    },
+    {
+      icon: '📈',
+      title: 'Business Strategy & Timing',
+      desc: 'Auspicious timing for new ventures, partner compatibility, cash flow recovery, scaling operations, and risk minimization through astrological insight.',
+      tag: 'Mercury & 10th/11th House'
+    },
+    {
+      icon: '💍',
+      title: 'Marriage & Relationships',
+      desc: 'Comprehensive 36-Guna Kundli Milan, marriage timing, resolving relationship friction, and gentle Manglik Dosh pacification for harmony.',
+      tag: 'Venus & Jupiter Blessings'
+    },
+    {
+      icon: '🏠',
+      title: 'Family & Generational Well-Being',
+      desc: 'Resolving family inheritance discord, progeny guidance (Santan Sukh), children’s education streams, and Pitra Dosh karmic healing.',
+      tag: '4th & 5th House Harmony'
+    },
+    {
+      icon: '🧭',
+      title: 'Vastu Shastra for Home & Office',
+      desc: 'Directional balance of the 5 elements in your home, commercial office, or shop to unlock prosperity, peace, and productivity without structural demolition.',
+      tag: 'Panchamahabhuta Balance'
+    },
+    {
+      icon: '⚖️',
+      title: 'Personal Decisions & Crossroads',
+      desc: 'Trusted counsel during periods of life uncertainty, chronic obstacles, legal disputes, name corrections, and reclaiming mental tranquility.',
+      tag: 'Holistic Multi-System Upaye'
+    }
+  ];
+
+  // ASTROLOGICAL SYSTEMS
+  const astroSystems = [
+    {
+      icon: '🕉️',
+      title: 'Vedic Astrology',
+      badge: 'Bharatiya Vidya Bhavan Certified',
+      desc: 'Classical Janma Kundli analysis, planetary dashas, transits (Gochar), and nakshatra yogas for deep foundational life trajectory.'
+    },
+    {
+      icon: '📕',
+      title: 'Lal Kitab',
+      badge: 'Swift Everyday Upaye',
+      desc: 'Karmic debt analysis and swift, practical remedies that work harmoniously with nature without cumbersome rituals.'
+    },
+    {
+      icon: '🔢',
+      title: 'Numerology',
+      badge: 'Vibrational Harmony',
+      desc: 'Life Path number matrix, name spelling correction, lucky dates, and brand name alignment for optimal energy resonance.'
+    },
+    {
+      icon: '🧭',
+      title: 'Vastu Shastra',
+      badge: 'Non-Destructive Energy',
+      desc: 'Balancing the 5 natural elements in residential and commercial premises without demolition or structural changes.'
+    },
+    {
+      icon: '💎',
+      title: 'Gemology & BNN',
+      badge: 'Precise Recommendation',
+      desc: 'Rigorous chart verification for natural gemstones combined with Bhrigu Nandi Nadi precision techniques.'
+    }
+  ];
+
+  // 6-STEP CONSULTATION JOURNEY
+  const journeySteps = [
+    {
+      step: '1',
+      title: 'Select Consultation',
+      desc: 'Choose your area of focus: Career, Business, Lal Kitab, Vedic Astrology, Vastu, or Comprehensive Life Reading.'
+    },
+    {
+      step: '2',
+      title: 'Choose Date / Time',
+      desc: 'Select a convenient time slot suited to your time zone across India, the US, UK, UAE, Canada, or Australia.'
+    },
+    {
+      step: '3',
+      title: 'Enter Basic Details',
+      desc: 'Provide your Full Name, Date of Birth, exact Time of Birth, Place of Birth, and your primary questions.'
+    },
+    {
+      step: '4',
+      title: 'Pay Securely via Razorpay',
+      desc: 'Complete your booking seamlessly via Razorpay supporting UPI, Cards, NetBanking, and International payments.'
+    },
+    {
+      step: '5',
+      title: 'Automatic Confirmation',
+      desc: 'Receive immediate appointment confirmation on screen and an automated booking confirmation via WhatsApp.'
+    },
+    {
+      step: '6',
+      title: 'Instructions Sent to Client',
+      desc: 'Session instructions, call details/meeting link, and preparation guidelines are delivered straight to your WhatsApp and email.'
     }
   ];
 
   return (
     <main>
-      {/* HERO SECTION */}
+      {/* =========================================================================
+          1. HERO SECTION (DRAMATIC + PROMINENT FRONT PAGE CREDENTIALS)
+          ========================================================================= */}
       <section className="hero-section" id="hero">
         <div className="hero-bg-media">
           <img src="/assets/images/hero_galaxy_zodiac.jpg" alt="Mystical cosmic galaxy zodiac wheel" className="hero-bg-img" />
@@ -225,23 +200,36 @@ _I would like to confirm my worldwide online consultation slot._`;
 
         <div className="container hero-grid">
           <div className="hero-content">
-            <div className="gold-badge">
-              <span>✨</span> <span>Ancient Wisdom • Modern Solutions • Worldwide Online Astrology</span>
+            {/* Front Page Prominent Display Banner */}
+            <div className="hero-credentials-banner">
+              <div className="credentials-name-title">
+                <span>🌟</span>
+                <span>Sanjeev Naryani — Jyotish Acharya &amp; Astrology Consultant</span>
+              </div>
+              <div className="credentials-exp-tag">
+                42 Years of Corporate Leadership Experience + Deep Astrological Practice
+              </div>
+              <div className="credentials-clarity-pills">
+                Clarity for Career • Business • Relationships • Family • Vastu
+              </div>
             </div>
+
             <h1 className="hero-title">
-              Worldwide Online <br />
-              <span className="gold-gradient-text">Astrology Consultation</span>
+              Online Consultations <br />
+              <span className="gold-gradient-text">Across India &amp; Worldwide</span>
             </h1>
+
             <p className="hero-subheading">
-              Lal Kitab • Vedic Astrology • Numerology • Gemology • Vastu • Astro Remedies
+              Vedic Astrology • Lal Kitab • Numerology • Vastu • Astro Remedies
             </p>
+
             <p className="hero-description">
-              Get accurate astrological guidance, personalized remedies, and practical spiritual solutions for life’s important challenges from the comfort of your home. Consult live with trusted Vedic & Lal Kitab astrologer across India and globally.
+              Get accurate astrological guidance, personalized remedies, and practical spiritual solutions for life’s important challenges from the comfort of your home. Consult live with Sanjeev Naryani, blending ancient cosmic wisdom with top executive clarity.
             </p>
 
             <div className="hero-cta-group">
               <a
-                href="https://wa.me/919619885158?text=Hello%20Naryani%20Astro%2C%20I%20would%20like%20to%20book%20an%20online%20astrology%20consultation."
+                href="https://wa.me/919619885158?text=Hello%20Sanjeev%20Ji%2C%20I%20would%20like%20to%20book%20an%20online%20astrology%20consultation."
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn btn-whatsapp btn-lg btn-shimmer"
@@ -253,34 +241,35 @@ _I would like to confirm my worldwide online consultation slot._`;
                 className="btn btn-primary btn-lg btn-shimmer"
                 onClick={() => openBookingModal('Worldwide Online Consultation')}
               >
-                <span>📅</span> <span>Book Online Consultation</span>
+                <span>🗓️</span> <span>Book Online Consultation</span>
               </button>
               <a href="tel:+919619885158" className="btn btn-call btn-lg">
                 <span>📞</span> <span>Call Now</span>
               </a>
             </div>
 
+            {/* Trust Badges */}
             <div className="hero-trust-indicators">
               <div className="trust-pill">
                 <span>🌍</span>
-                <span><strong>100% Online</strong> Worldwide Consultations</span>
+                <span><strong>Online Consultations</strong> — India &amp; Worldwide</span>
               </div>
               <div className="trust-pill">
                 <span>🔮</span>
-                <span><strong>Personalized</strong> Chart Reading</span>
+                <span><strong>Personalised</strong> Birth Chart Analysis</span>
               </div>
               <div className="trust-pill">
-                <span>📿</span>
-                <span><strong>Practical</strong> Upaye & Remedies</span>
+                <span>🪬</span>
+                <span><strong>Practical</strong> Guidance &amp; Remedies</span>
               </div>
               <div className="trust-pill">
                 <span>🔒</span>
-                <span><strong>Strictly</strong> Confidential</span>
+                <span><strong>Private &amp; Strictly</strong> Confidential</span>
               </div>
             </div>
           </div>
 
-          {/* Hero Visual Zodiac Wheel */}
+          {/* Hero Visual Zodiac Wheel (Scaled down by 25% for balanced aesthetics) */}
           <div className="hero-visual-card">
             <div className="zodiac-wheel-wrapper">
               <img src="/assets/images/hero_galaxy_zodiac.jpg" alt="Astrological Zodiac Wheel" className="zodiac-wheel-img" />
@@ -293,477 +282,235 @@ _I would like to confirm my worldwide online consultation slot._`;
             <div className="hero-floating-badge badge-top">
               <span>🔴</span>
               <div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--text-subtle)' }}>Specialization</div>
-                <div style={{ color: 'var(--gold-light)' }}>Lal Kitab Upaye</div>
+                <div style={{ fontSize: '0.72rem', color: 'var(--text-subtle)' }}>Multi-System Expertise</div>
+                <div style={{ color: 'var(--gold-light)', fontWeight: 600 }}>Vedic &amp; Lal Kitab</div>
               </div>
             </div>
 
             <div className="hero-floating-badge badge-bottom">
               <span>✨</span>
               <div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--text-subtle)' }}>Consultation Mode</div>
-                <div style={{ color: 'var(--wa-green)' }}>WhatsApp & Audio/Video Call</div>
+                <div style={{ fontSize: '0.72rem', color: 'var(--text-subtle)' }}>Consultation Mode</div>
+                <div style={{ color: 'var(--wa-green)', fontWeight: 600 }}>WhatsApp, Voice &amp; Video</div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* TRUST SECTION */}
-      <section className="section" style={{ paddingTop: '2rem' }}>
+      {/* =========================================================================
+          2. TRUST POINTS (CLEAN / MINIMAL)
+          ========================================================================= */}
+      <section className="section" style={{ paddingTop: '2.5rem', paddingBottom: '2.5rem' }}>
         <div className="container">
           <div className="trust-grid">
             <div className="glass-card trust-card">
               <div className="trust-icon-box">🌍</div>
-              <h3 className="trust-card-title">Worldwide Online Consultation</h3>
+              <h3 className="trust-card-title">CONSULT FROM ANYWHERE</h3>
               <p className="trust-card-desc">
-                Consult from anywhere in the world. Seamless consultations across India, USA, UK, UAE, Canada, Australia, and beyond via WhatsApp, Voice, and Video.
+                <strong>Online consultations across India &amp; worldwide.</strong> Connect with Sanjeev Naryani through WhatsApp, voice or video consultation — from wherever you are.
               </p>
             </div>
 
             <div className="glass-card trust-card">
               <div className="trust-icon-box">🔮</div>
-              <h3 className="trust-card-title">Personalized Guidance</h3>
+              <h3 className="trust-card-title">PERSONALIZED ASTROLOGICAL GUIDANCE</h3>
               <p className="trust-card-desc">
-                Solutions deeply customized according to your exact birth date, birth time, planetary positions, and real-life circumstances.
+                Every consultation is based on your birth details, planetary influences and—most importantly—your real-life circumstances and concerns.
               </p>
             </div>
 
             <div className="glass-card trust-card">
-              <div className="trust-icon-box">📿</div>
-              <h3 className="trust-card-title">Traditional + Practical Remedies</h3>
+              <div className="trust-icon-box">🪬</div>
+              <h3 className="trust-card-title">PRACTICAL GUIDANCE &amp; REMEDIES</h3>
               <p className="trust-card-desc">
-                Ancient astrological knowledge translated into ethical, safe, and practical everyday remedies (upaye) that are easy to perform.
+                Ancient astrological knowledge translated into ethical, safe, and practical everyday remedies (upaye) that are easy to perform without fear or superstition.
               </p>
             </div>
 
             <div className="glass-card trust-card">
-              <div className="trust-icon-box">⭐</div>
-              <h3 className="trust-card-title">Relationship, Career & Marriage</h3>
+              <div className="trust-icon-box">🔒</div>
+              <h3 className="trust-card-title">PRIVATE &amp; STRICTLY CONFIDENTIAL</h3>
               <p className="trust-card-desc">
-                Holistic life guidance addressing marriage timing, kundli matching, business expansion, career transitions, and family harmony.
+                Your personal birth data, family discussions, and corporate career decisions are treated with absolute confidentiality and executive discretion.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ABOUT SECTION */}
-      <section className="section" id="about">
+      {/* =========================================================================
+          3. MEET SANJEEV NARYANI (PROFILE SECTION)
+          ========================================================================= */}
+      <section className="section" id="meet-sanjeev" style={{ paddingTop: '1.5rem' }}>
         <div className="container">
-          <div className="about-grid">
-            <div className="about-image-wrap" style={{ textAlign: 'center' }}>
-              <img
-                src="/assets/images/logo.jpg"
-                alt="Astrologer Sanjeev Naryani - Naryani Astro"
-                style={{
-                  borderRadius: '50%',
-                  maxWidth: '380px',
-                  width: '100%',
-                  margin: '0 auto',
-                  border: '3px solid var(--gold-primary)',
-                  boxShadow: '0 0 45px rgba(212, 175, 55, 0.45)',
-                  display: 'block'
-                }}
-              />
-              <div className="about-floating-stat">
-                <div className="about-stat-number">100%</div>
-                <div className="about-stat-label">Personalized Guidance</div>
-              </div>
-            </div>
-
-            <div className="about-content-block">
-              <div className="gold-badge">About Us</div>
-              <h2 className="section-title">
-                Ancient Cosmic Wisdom for <br />
-                <span className="gold-gradient-text">Modern Life Challenges</span>
-              </h2>
-              <p className="about-lead">
-                Naryani Astro is a trusted online astrology consultation platform dedicated to helping individuals worldwide navigate life's pivotal moments through authentic astrological analysis and personalized remedies.
-              </p>
-              <p>
-                Under the guiding banner of <em>"Ancient Wisdom • Modern Solutions"</em>, our mission is to deliver clear, ethical, and grounded guidance without fear-mongering or impractical rituals. We combine classical Vedic astrology principles with the fast-acting, practical remedies of Lal Kitab, accurate Numerology matrices, scientific Gemology, and harmonizing Vastu Shastra.
-              </p>
-
-              <div className="expertise-chips-grid">
-                <div className="expertise-chip"><span>🔴</span> <span>Lal Kitab Horoscope & Upaye</span></div>
-                <div className="expertise-chip"><span>🕉️</span> <span>Classical Vedic Birth Chart</span></div>
-                <div className="expertise-chip"><span>🔢</span> <span>Name & Date Numerology</span></div>
-                <div className="expertise-chip"><span>💎</span> <span>Vedic Gemology Consultation</span></div>
-                <div className="expertise-chip"><span>🏡</span> <span>Home & Business Vastu</span></div>
-                <div className="expertise-chip"><span>🌟</span> <span>Custom Planetary Remedies</span></div>
+          <div className="meet-sanjeev-card">
+            <div className="about-grid" style={{ alignItems: 'center' }}>
+              {/* Professional Photograph */}
+              <div className="profile-photo-container">
+                <img
+                  src="/assets/images/sanjeev_naryani_portrait.jpg"
+                  alt="Sanjeev Naryani - Jyotish Acharya & Astrology Consultant"
+                  className="profile-photo-img"
+                />
+                <div style={{ marginTop: '1.25rem', textAlign: 'center' }}>
+                  <span className="discipline-pill-badge" style={{ fontSize: '0.85rem' }}>
+                    🌟 42 Years Corporate Leadership
+                  </span>
+                </div>
               </div>
 
-              <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginTop: '1rem' }}>
-                <Link to="/about" className="btn btn-outline">Read Full Philosophy</Link>
-                <a
-                  href="https://wa.me/919619885158?text=Hello%20Naryani%20Astro%2C%20I%20would%20like%20to%20know%20more%20about%20your%20online%20consultation."
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn btn-whatsapp"
-                >
-                  <span>💬</span> <span>Inquire on WhatsApp</span>
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ASTROLOGY SERVICES GRID */}
-      <section className="section" id="services" style={{ background: 'radial-gradient(circle at 50% 50%, rgba(11,31,77,0.4) 0%, transparent 80%)' }}>
-        <div className="container">
-          <div className="section-header">
-            <div className="gold-badge">Our Astrology Services</div>
-            <h2 className="section-title">Comprehensive Astrology Solutions for <span className="gold-gradient-text">Every Sphere of Life</span></h2>
-            <p className="section-subtitle">
-              Explore our specialized disciplines. Each consultation includes in-depth birth chart analysis, clear explanations, and customized practical remedies.
-            </p>
-          </div>
-
-          <div className="services-grid">
-            {/* Lal Kitab */}
-            <div className="glass-card service-card">
-              <div>
-                <div className="service-card-top">
-                  <div className="service-icon-wrap">🔴</div>
-                  <span className="service-badge-tag">Specialty</span>
-                </div>
-                <h3 className="service-title">Lal Kitab Consultation</h3>
-                <p className="service-desc">
-                  Traditional Lal Kitab horoscope reading and swift, practical remedies for complex planetary combinations and stubborn life roadblocks.
-                </p>
-                <div className="service-bullets">
-                  <div className="service-bullet-item"><span>✦</span> <span>Lal Kitab Kundli Analysis</span></div>
-                  <div className="service-bullet-item"><span>✦</span> <span>Grah Dosh Identification</span></div>
-                  <div className="service-bullet-item"><span>✦</span> <span>Customized Everyday Upaye</span></div>
-                  <div className="service-bullet-item"><span>✦</span> <span>Debt & Obstacle Relief</span></div>
-                </div>
-              </div>
-              <div className="service-card-actions">
-                <a
-                  href="https://wa.me/919619885158?text=Hello%20Naryani%20Astro%2C%20I%20would%20like%20to%20book%20a%20Lal%20Kitab%20Consultation."
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn btn-whatsapp btn-shimmer"
-                >
-                  <span>💬</span> <span>WhatsApp Consultation</span>
-                </a>
-                <Link to="/lal-kitab" className="btn btn-outline btn-sm">Explore Lal Kitab →</Link>
-              </div>
-            </div>
-
-            {/* Vedic Astrology */}
-            <div className="glass-card service-card">
-              <div>
-                <div className="service-card-top">
-                  <div className="service-icon-wrap">🕉️</div>
-                  <span className="service-badge-tag">Foundational</span>
-                </div>
-                <h3 className="service-title">Vedic Astrology</h3>
-                <p className="service-desc">
-                  In-depth birth chart analysis examining planetary transits (Gochar), Dasha periods, Nakshatras, and destiny yogas for holistic life guidance.
-                </p>
-                <div className="service-bullets">
-                  <div className="service-bullet-item"><span>✦</span> <span>Lagna & Navamsha Chart Reading</span></div>
-                  <div className="service-bullet-item"><span>✦</span> <span>Mahadasha & Antardasha Timing</span></div>
-                  <div className="service-bullet-item"><span>✦</span> <span>Kundli Milan (Marriage Match)</span></div>
-                  <div className="service-bullet-item"><span>✦</span> <span>Career & Wealth Potential</span></div>
-                </div>
-              </div>
-              <div className="service-card-actions">
-                <a
-                  href="https://wa.me/919619885158?text=Hello%20Naryani%20Astro%2C%20I%20would%20like%20to%20book%20a%20Vedic%20Astrology%20Consultation."
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn btn-whatsapp btn-shimmer"
-                >
-                  <span>💬</span> <span>WhatsApp Consultation</span>
-                </a>
-                <button
-                  type="button"
-                  className="btn btn-outline btn-sm"
-                  onClick={() => openBookingModal('Vedic Astrology Consultation')}
-                >
-                  Book Session →
-                </button>
-              </div>
-            </div>
-
-            {/* Numerology */}
-            <div className="glass-card service-card">
-              <div>
-                <div className="service-card-top">
-                  <div className="service-icon-wrap">🔢</div>
-                  <span className="service-badge-tag">Vibrational</span>
-                </div>
-                <h3 className="service-title">Numerology Consultation</h3>
-                <p className="service-desc">
-                  Harmonize your core numerical frequencies through date of birth, name spelling analysis, mobile number, and business name alignment.
-                </p>
-                <div className="service-bullets">
-                  <div className="service-bullet-item"><span>✦</span> <span>Life Path & Destiny Number Matrix</span></div>
-                  <div className="service-bullet-item"><span>✦</span> <span>Name Correction Suggestions</span></div>
-                  <div className="service-bullet-item"><span>✦</span> <span>Mobile Number Numerology</span></div>
-                  <div className="service-bullet-item"><span>✦</span> <span>Lucky Dates & Business Names</span></div>
-                </div>
-              </div>
-              <div className="service-card-actions">
-                <a
-                  href="https://wa.me/919619885158?text=Hello%20Naryani%20Astro%2C%20I%20would%20like%20to%20book%20a%20Numerology%20Consultation."
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn btn-whatsapp btn-shimmer"
-                >
-                  <span>💬</span> <span>WhatsApp Consultation</span>
-                </a>
-                <Link to="/numerology" className="btn btn-outline btn-sm">Try Calculator →</Link>
-              </div>
-            </div>
-
-            {/* Gemology */}
-            <div className="glass-card service-card">
-              <div>
-                <div className="service-card-top">
-                  <div className="service-icon-wrap">💎</div>
-                  <span className="service-badge-tag">Energetic</span>
-                </div>
-                <h3 className="service-title">Gemology Consultation</h3>
-                <p className="service-desc">
-                  Precise gemstone recommendations based on your unique planetary strengths. We ensure safe, empowering stones and ethical wearing rituals.
-                </p>
-                <div className="service-bullets">
-                  <div className="service-bullet-item"><span>✦</span> <span>Accurate Chart Verification</span></div>
-                  <div className="service-bullet-item"><span>✦</span> <span>Planetary Stone Selection</span></div>
-                  <div className="service-bullet-item"><span>✦</span> <span>Metal, Finger & Day Rituals</span></div>
-                  <div className="service-bullet-item"><span>✦</span> <span>Caution against Adverse Gems</span></div>
-                </div>
-              </div>
-              <div className="service-card-actions">
-                <a
-                  href="https://wa.me/919619885158?text=Hello%20Naryani%20Astro%2C%20I%20would%20like%20to%20book%20a%20Gemology%20Consultation."
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn btn-whatsapp btn-shimmer"
-                >
-                  <span>💬</span> <span>WhatsApp Consultation</span>
-                </a>
-                <Link to="/gemology" className="btn btn-outline btn-sm">Gemstone Guide →</Link>
-              </div>
-            </div>
-
-            {/* Vastu */}
-            <div className="glass-card service-card">
-              <div>
-                <div className="service-card-top">
-                  <div className="service-icon-wrap">🏡</div>
-                  <span className="service-badge-tag">Spatial Harmony</span>
-                </div>
-                <h3 className="service-title">Vastu Consultation</h3>
-                <p className="service-desc">
-                  Align the five natural elements (Panchamahabhutas) in your residence, corporate office, shop, or commercial facility without structural breakdown.
-                </p>
-                <div className="service-bullets">
-                  <div className="service-bullet-item"><span>✦</span> <span>Home & Apartment Energy Flow</span></div>
-                  <div className="service-bullet-item"><span>✦</span> <span>Office, Cabin & Desk Direction</span></div>
-                  <div className="service-bullet-item"><span>✦</span> <span>Shop Cash-Box & Entry Vastu</span></div>
-                  <div className="service-bullet-item"><span>✦</span> <span>Non-Destructive Vastu Upaye</span></div>
-                </div>
-              </div>
-              <div className="service-card-actions">
-                <a
-                  href="https://wa.me/919619885158?text=Hello%20Naryani%20Astro%2C%20I%20would%20like%20to%20book%20a%20Vastu%20Consultation."
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn btn-whatsapp btn-shimmer"
-                >
-                  <span>💬</span> <span>WhatsApp Consultation</span>
-                </a>
-                <Link to="/vastu" className="btn btn-outline btn-sm">Explore Vastu →</Link>
-              </div>
-            </div>
-
-            {/* Astro Remedies */}
-            <div className="glass-card service-card">
-              <div>
-                <div className="service-card-top">
-                  <div className="service-icon-wrap">🌟</div>
-                  <span className="service-badge-tag">Holistic Upaye</span>
-                </div>
-                <h3 className="service-title">Astro Remedies & Solutions</h3>
-                <p className="service-desc">
-                  Practical, personalized remedies for planetary imbalances and ongoing life challenges. Designed for real life, peace of mind, and karmic balance.
-                </p>
-                <div className="service-bullets">
-                  <div className="service-bullet-item"><span>✦</span> <span>Customized Upaye for Planetary Peace</span></div>
-                  <div className="service-bullet-item"><span>✦</span> <span>Navagraha Shanti Rituals</span></div>
-                  <div className="service-bullet-item"><span>✦</span> <span>Spiritual Mantras & Charity Advice</span></div>
-                  <div className="service-bullet-item"><span>✦</span> <span>Personalized Growth Blueprint</span></div>
-                </div>
-              </div>
-              <div className="service-card-actions">
-                <a
-                  href="https://wa.me/919619885158?text=Hello%20Naryani%20Astro%2C%20I%20would%20like%20to%20book%20an%20Astro%20Remedies%20Consultation."
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn btn-whatsapp btn-shimmer"
-                >
-                  <span>💬</span> <span>WhatsApp Consultation</span>
-                </a>
-                <Link to="/remedies" className="btn btn-outline btn-sm">View Life Remedies →</Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* LAL KITAB SPOTLIGHT */}
-      <section className="section" id="lal-kitab">
-        <div className="container">
-          <div className="lal-kitab-highlight-box">
-            <div className="lal-kitab-grid">
-              <div>
-                <div className="gold-badge">Dedicated Specialization</div>
-                <h2 className="section-title">
-                  The Practical Power of <br />
-                  <span className="gold-gradient-text">Lal Kitab Astrology</span>
+              {/* Profile Text & Credentials */}
+              <div className="about-content-block">
+                <div className="gold-badge" style={{ marginBottom: '0.5rem' }}>Meet Sanjeev Naryani</div>
+                <h2 style={{ fontSize: 'clamp(1.85rem, 3.2vw, 2.5rem)', color: 'var(--gold-light)', marginBottom: '0.35rem', lineHeight: 1.2 }}>
+                  SANJEEV NARYANI
                 </h2>
-                <p style={{ fontSize: '1.05rem', lineHeight: 1.7, color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
-                  Lal Kitab is celebrated for its uncanny accuracy and remarkably pragmatic approach to astrology. Unlike traditional rituals that require complex, expensive ceremonies, Lal Kitab offers personalized, ethical, and simple upaye (remedies) that work harmoniously with planetary energies to neutralize negative karmic influences.
+                <h4 style={{ color: 'var(--text-gold)', fontSize: '1.05rem', fontWeight: 600, letterSpacing: '0.04em', marginBottom: '0.35rem' }}>
+                  Jyotish Acharya | Astrology Consultant
+                </h4>
+                <div style={{ color: 'var(--text-main)', fontSize: '0.95rem', fontWeight: 600, marginBottom: '1rem' }}>
+                  42 Years of Banking &amp; Top Leadership Experience
+                </div>
+
+                <div className="profile-quote-box">
+                  “My approach combines traditional astrological wisdom with practical understanding of people, careers, businesses and relationships.”
+                </div>
+
+                <p style={{ fontSize: '1.02rem', lineHeight: 1.7, color: 'var(--text-muted)', marginBottom: '1rem' }}>
+                  Sanjeev Naryani brings together traditional astrological knowledge and decades of experience in leadership, people and business decision-making. His approach is focused on understanding the individual, identifying the underlying astrological influences and providing practical guidance and remedies relevant to real-life circumstances.
                 </p>
 
-                <div className="lal-kitab-features-list">
-                  <div className="lal-kitab-feature-item">
-                    <h4>📜 Lal Kitab Horoscope Reading</h4>
-                    <p>In-depth house-by-house analysis uncovering hidden planetary clashes.</p>
-                  </div>
-                  <div className="lal-kitab-feature-item">
-                    <h4>📿 Personalized Upaye</h4>
-                    <p>Tailored everyday actions, water/earth rituals, and non-harmful donations.</p>
-                  </div>
-                  <div className="lal-kitab-feature-item">
-                    <h4>🪐 Grah Dosh Remedies</h4>
-                    <p>Specific remedies to pacify Rahu, Ketu, Shani (Saturn), and afflicted Mangal doshas.</p>
-                  </div>
-                  <div className="lal-kitab-feature-item">
-                    <h4>💡 Life Problem Solutions</h4>
-                    <p>Practical remedies addressing financial leaks, relationship stagnation, and career delays.</p>
-                  </div>
+                <div className="leadership-callout-box">
+                  <div className="leadership-callout-title">ASTROLOGY + REAL-WORLD LEADERSHIP EXPERIENCE</div>
+                  <p style={{ fontSize: '0.92rem', lineHeight: 1.65, color: 'var(--text-muted)', margin: 0 }}>
+                    With 42 years of experience in the banking and leadership environment, including senior executive leadership, Sanjeev Naryani brings a practical understanding of people, organisations, careers and difficult decisions to his astrological consultations.
+                  </p>
+                </div>
+
+                <div style={{ fontSize: '0.9rem', color: 'var(--gold-soft)', fontWeight: 600, marginTop: '1rem' }}>
+                  Areas of Guidance: Career • Business • Marriage &amp; Relationships • Family • Vastu • Personal Decisions
+                </div>
+
+                <div className="disciplines-pills-row">
+                  <span className="discipline-pill-badge">Vedic Astrology</span>
+                  <span className="discipline-pill-badge">Lal Kitab</span>
+                  <span className="discipline-pill-badge">Numerology</span>
+                  <span className="discipline-pill-badge">Vastu</span>
                 </div>
 
                 <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
+                  <button
+                    type="button"
+                    className="btn btn-primary btn-shimmer"
+                    onClick={() => setIsBioModalOpen(true)}
+                  >
+                    <span>📜</span> <span>Know More About Sanjeev Naryani</span>
+                  </button>
                   <a
-                    href="https://wa.me/919619885158?text=Hello%20Naryani%20Astro%2C%20I%20am%20interested%20in%20a%20Lal%20Kitab%20Horoscope%20Reading%20and%20Upaye."
+                    href="https://wa.me/919619885158?text=Hello%20Sanjeev%20Ji%2C%20I%20would%20like%20to%20book%20a%20consultation%20with%20you."
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="btn btn-whatsapp btn-lg btn-shimmer"
+                    className="btn btn-whatsapp"
                   >
-                    <span>💬</span> <span>Consult on WhatsApp</span>
+                    <span>💬</span> <span>Inquire on WhatsApp</span>
                   </a>
-                  <Link to="/lal-kitab" className="btn btn-outline btn-lg">Learn More About Lal Kitab</Link>
                 </div>
-              </div>
-
-              <div className="lal-kitab-img-wrap">
-                <img src="/assets/images/lal_kitab_mystic.jpg" alt="Sacred Lal Kitab Scripture and Diya Lamp" />
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ASTRO REMEDIES & SOLUTIONS */}
-      <section className="section" id="remedies">
+      {/* =========================================================================
+          4. WHY NARYANI ASTRO? (PILLARS OF DISTINCTION)
+          ========================================================================= */}
+      <section className="section" id="why-choose" style={{ background: 'rgba(6, 13, 33, 0.45)' }}>
         <div className="container">
           <div className="section-header">
-            <div className="gold-badge">Astro Remedies & Solutions</div>
-            <h2 className="section-title">Practical Remedies for <span className="gold-gradient-text">Life's Important Challenges</span></h2>
+            <div className="gold-badge">Our Pillars of Distinction</div>
+            <h2 className="section-title">Why Choose <span className="gold-gradient-text">Naryani Astro</span></h2>
             <p className="section-subtitle">
-              Planetary imbalances manifest in recognizable life patterns. Filter through common concerns below to discover how astrology provides ethical, grounded pathways forward.
+              A rare synthesis of executive corporate wisdom, multi-system astrological expertise, and grounded, ethical remedies.
             </p>
           </div>
 
-          <div className="remedies-filter-tabs">
-            <button
-              type="button"
-              className={`filter-tab-btn ${activeRemedyFilter === 'all' ? 'active' : ''}`}
-              onClick={() => setActiveRemedyFilter('all')}
-            >
-              All Challenges
-            </button>
-            <button
-              type="button"
-              className={`filter-tab-btn ${activeRemedyFilter === 'relationships' ? 'active' : ''}`}
-              onClick={() => setActiveRemedyFilter('relationships')}
-            >
-              ❤️ Relationships
-            </button>
-            <button
-              type="button"
-              className={`filter-tab-btn ${activeRemedyFilter === 'career' ? 'active' : ''}`}
-              onClick={() => setActiveRemedyFilter('career')}
-            >
-              💼 Career
-            </button>
-            <button
-              type="button"
-              className={`filter-tab-btn ${activeRemedyFilter === 'marriage' ? 'active' : ''}`}
-              onClick={() => setActiveRemedyFilter('marriage')}
-            >
-              💍 Marriage
-            </button>
-            <button
-              type="button"
-              className={`filter-tab-btn ${activeRemedyFilter === 'children' ? 'active' : ''}`}
-              onClick={() => setActiveRemedyFilter('children')}
-            >
-              👶 Children
-            </button>
-            <button
-              type="button"
-              className={`filter-tab-btn ${activeRemedyFilter === 'disputes' ? 'active' : ''}`}
-              onClick={() => setActiveRemedyFilter('disputes')}
-            >
-              ⚖️ Disputes
-            </button>
-            <button
-              type="button"
-              className={`filter-tab-btn ${activeRemedyFilter === 'financial' ? 'active' : ''}`}
-              onClick={() => setActiveRemedyFilter('financial')}
-            >
-              💰 Financial
-            </button>
-            <button
-              type="button"
-              className={`filter-tab-btn ${activeRemedyFilter === 'family' ? 'active' : ''}`}
-              onClick={() => setActiveRemedyFilter('family')}
-            >
-              🏠 Family Harmony
-            </button>
-            <button
-              type="button"
-              className={`filter-tab-btn ${activeRemedyFilter === 'doshas' ? 'active' : ''}`}
-              onClick={() => setActiveRemedyFilter('doshas')}
-            >
-              🪐 Planetary Doshas
-            </button>
+          <div className="why-choose-grid">
+            <div className="glass-card why-choose-card">
+              <div className="why-icon">👔</div>
+              <h3 className="why-card-title">Corporate Executive Insight</h3>
+              <p className="why-card-desc">
+                42 years of banking leadership and former MD &amp; CEO background brings unparalleled understanding of workplace dynamics, organizational politics, and business risks.
+              </p>
+            </div>
+
+            <div className="glass-card why-choose-card">
+              <div className="why-icon">🎓</div>
+              <h3 className="why-card-title">Certified Jyotish Acharya</h3>
+              <p className="why-card-desc">
+                Formal 2-year Jyotish Acharya credential from Bharatiya Vidya Bhavan, ensuring authentic classical Vedic methodology and rigorous astrological calculation.
+              </p>
+            </div>
+
+            <div className="glass-card why-choose-card">
+              <div className="why-icon">📚</div>
+              <h3 className="why-card-title">Integrated Multi-System Analysis</h3>
+              <p className="why-card-desc">
+                Cross-referencing Vedic Astrology, Lal Kitab, Numerology, Vastu Shastra, and BNN to ensure holistic accuracy across all dimensions of your life.
+              </p>
+            </div>
+
+            <div className="glass-card why-choose-card">
+              <div className="why-icon">🪬</div>
+              <h3 className="why-card-title">Practical, Ethical Upaye</h3>
+              <p className="why-card-desc">
+                Zero fear-mongering and no exorbitant rituals. Simple everyday actions, color alignments, charity, and water rituals that easily fit modern routines.
+              </p>
+            </div>
+
+            <div className="glass-card why-choose-card">
+              <div className="why-icon">🌍</div>
+              <h3 className="why-card-title">Worldwide Online Convenience</h3>
+              <p className="why-card-desc">
+                Tailored one-on-one sessions via WhatsApp voice/video call across India, North America, UK, Middle East, Europe, and Australia.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* =========================================================================
+          5. AREAS I HELP WITH (AREAS OF GUIDANCE — 6 CARDS)
+          ========================================================================= */}
+      <section className="section" id="areas-help">
+        <div className="container">
+          <div className="section-header">
+            <div className="gold-badge">Areas of Guidance</div>
+            <h2 className="section-title">Areas I <span className="gold-gradient-text">Help With</span></h2>
+            <p className="section-subtitle">
+              Clear astrological counsel tailored to your life stage and critical decision points.
+            </p>
           </div>
 
-          <div className="remedies-grid">
-            {filteredRemedies.map((item) => (
-              <div key={item.id} className="glass-card remedy-issue-card">
-                <div className="remedy-issue-icon">{item.icon}</div>
-                <h3 className="remedy-issue-title">{item.title}</h3>
-                <p className="remedy-issue-desc">{item.desc}</p>
-                <div className="remedy-card-footer">
-                  <span style={{ fontSize: '0.8rem', color: 'var(--gold-soft)' }}>{item.tag}</span>
+          <div className="areas-help-grid">
+            {guidanceAreas.map((area, idx) => (
+              <div key={idx} className="glass-card area-card">
+                <div>
+                  <div style={{ fontSize: '2.4rem', marginBottom: '0.85rem' }}>{area.icon}</div>
+                  <h3 style={{ fontSize: '1.28rem', color: 'var(--gold-light)', marginBottom: '0.65rem' }}>{area.title}</h3>
+                  <p style={{ fontSize: '0.92rem', lineHeight: 1.65, color: 'var(--text-muted)', marginBottom: '1.25rem' }}>
+                    {area.desc}
+                  </p>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '1rem', borderTop: '1px solid rgba(212,175,55,0.15)' }}>
+                  <span style={{ fontSize: '0.8rem', color: 'var(--gold-soft)', fontWeight: 600 }}>{area.tag}</span>
                   <a
-                    href={`https://wa.me/919619885158?text=${encodeURIComponent(`Hello Naryani Astro, I would like remedies and guidance for ${item.title}.`)}`}
+                    href={`https://wa.me/919619885158?text=${encodeURIComponent(`Hello Sanjeev Ji, I would like astrological guidance regarding: ${area.title}.`)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="btn btn-whatsapp btn-sm"
                   >
-                    WhatsApp
+                    Consult
                   </a>
                 </div>
               </div>
@@ -772,263 +519,91 @@ _I would like to confirm my worldwide online consultation slot._`;
         </div>
       </section>
 
-      {/* NUMEROLOGY LIVE CALCULATOR TEASER */}
-      <section className="section" id="numerology">
-        <div className="container">
-          <div className="numerology-tool-card">
-            <div className="text-center" style={{ marginBottom: '2.5rem' }}>
-              <div className="gold-badge">Interactive Tool</div>
-              <h2 className="section-title">Calculate Your <span className="gold-gradient-text">Life Path Number</span></h2>
-              <p style={{ color: 'var(--text-muted)', maxWidth: '650px', margin: '0 auto' }}>
-                In Vedic & Pythagorean numerology, your date of birth holds the vibrational blueprint of your core mission, talents, and karmic destiny. Enter your details below for an instant reading.
-              </p>
-            </div>
-
-            <div className="num-calc-grid">
-              <form onSubmit={handleNumCalculate} className="num-input-group">
-                <div>
-                  <label htmlFor="num-name-input" className="form-label">Your Full Name (Optional)</label>
-                  <input
-                    type="text"
-                    id="num-name-input"
-                    className="form-input"
-                    placeholder="e.g. Aarav Sharma"
-                    value={numName}
-                    onChange={(e) => setNumName(e.target.value)}
-                  />
-                </div>
-                <div>
-                  <label htmlFor="num-dob-input" className="form-label">Your Date of Birth *</label>
-                  <input
-                    type="date"
-                    id="num-dob-input"
-                    className="form-input"
-                    value={numDob}
-                    onChange={(e) => setNumDob(e.target.value)}
-                    required
-                  />
-                </div>
-                <button type="submit" className="btn btn-primary btn-shimmer" style={{ marginTop: '0.5rem' }}>
-                  <span>🔢</span> <span>Calculate Life Path Number</span>
-                </button>
-                <div style={{ fontSize: '0.82rem', color: 'var(--text-subtle)', textAlign: 'center' }}>
-                  Supports numbers 1-9 and Master Numbers 11, 22, 33
-                </div>
-              </form>
-
-              <div id="numerology-result" className="num-result-box">
-                <div className="num-circle-badge">{calcResult.number}</div>
-                <h3 className="num-result-title">{calcResult.title}</h3>
-                <p style={{ fontSize: '0.88rem', color: 'var(--gold-soft)', marginBottom: '0.5rem' }}>
-                  <strong>Planetary Ruler:</strong> {calcResult.ruler}
-                </p>
-                <p className="num-result-text">{calcResult.traits}</p>
-                <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '1.25rem' }}>
-                  <strong>Spiritual Guidance:</strong> {calcResult.advice}
-                </p>
-                <a
-                  href={`https://wa.me/919619885158?text=${encodeURIComponent(`Hello Naryani Astro, I calculated my Numerology Life Path Number as ${calcResult.number} for ${numName || 'Seeker'} (DOB: ${numDob}). I would like to book a detailed consultation.`)}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn btn-whatsapp btn-sm btn-shimmer"
-                >
-                  <span>💬</span> <span>Consult on WhatsApp for Full Report</span>
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* GEMOLOGY & VASTU SHOWCASE */}
-      <section className="section" style={{ paddingTop: '1rem' }}>
-        <div className="container">
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2rem' }}>
-            <div className="glass-card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-              <div>
-                <div style={{ borderRadius: 'var(--radius-md)', overflow: 'hidden', marginBottom: '1.5rem', maxHeight: '220px' }}>
-                  <img src="/assets/images/gemology_crystals.jpg" alt="Vedic Astrological Gemstones" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                </div>
-                <div className="gold-badge">Gemstone Consultation</div>
-                <h3 style={{ fontSize: '1.45rem', marginBottom: '0.75rem' }}>Ethical Gemology Guidance</h3>
-                <p style={{ fontSize: '0.95rem', lineHeight: 1.65, marginBottom: '1.25rem' }}>
-                  Gemstones concentrate cosmic radiation. Wearing the incorrect stone can amplify hostile planetary vibrations. Naryani Astro provides rigorous chart verification before suggesting any natural planetary gemstone.
-                </p>
-                <div className="service-bullets">
-                  <div className="service-bullet-item"><span>✦</span> <span>Lucky Gem Consultation & Carat Weight</span></div>
-                  <div className="service-bullet-item"><span>✦</span> <span>Right Metal, Finger & Muhurta for Wearing</span></div>
-                  <div className="service-bullet-item"><span>✦</span> <span>Vedic Prana Pratishtha Energization</span></div>
-                </div>
-              </div>
-              <div style={{ marginTop: '1.5rem', display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-                <a
-                  href="https://wa.me/919619885158?text=Hello%20Naryani%20Astro%2C%20I%20would%20like%20guidance%20on%20my%20suitable%20astrological%20gemstone."
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn btn-whatsapp btn-sm"
-                >
-                  <span>💬</span> <span>WhatsApp Gemology</span>
-                </a>
-                <Link to="/gemology" className="btn btn-outline btn-sm">Read Guidelines →</Link>
-              </div>
-            </div>
-
-            <div className="glass-card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-              <div>
-                <div style={{ borderRadius: 'var(--radius-md)', overflow: 'hidden', marginBottom: '1.5rem', maxHeight: '220px' }}>
-                  <img src="/assets/images/vastu_compass.jpg" alt="Vastu Purusha Mandala and Brass Compass" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                </div>
-                <div className="gold-badge">Energy Balance</div>
-                <h3 style={{ fontSize: '1.45rem', marginBottom: '0.75rem' }}>Home & Business Vastu Guidance</h3>
-                <p style={{ fontSize: '0.95rem', lineHeight: 1.65, marginBottom: '1.25rem' }}>
-                  Harmonize the directional energies of your living and commercial spaces. Our online consultations assess floor plans, main entrances, kitchen (Agni zone), and master bedrooms without demanding structural demolition.
-                </p>
-                <div className="service-bullets">
-                  <div className="service-bullet-item"><span>✦</span> <span>Home & Residential Vastu Analysis</span></div>
-                  <div className="service-bullet-item"><span>✦</span> <span>Office, Shop & Factory Productivity</span></div>
-                  <div className="service-bullet-item"><span>✦</span> <span>Color, Mirror & Element Vastu Upaye</span></div>
-                </div>
-              </div>
-              <div style={{ marginTop: '1.5rem', display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-                <a
-                  href="https://wa.me/919619885158?text=Hello%20Naryani%20Astro%2C%20I%20would%20like%20an%20Online%20Vastu%20Consultation."
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn btn-whatsapp btn-sm"
-                >
-                  <span>💬</span> <span>WhatsApp Vastu</span>
-                </a>
-                <Link to="/vastu" className="btn btn-outline btn-sm">Explore Vastu →</Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ONLINE PROCESS */}
-      <section className="section" id="process">
+      {/* =========================================================================
+          6. ASTROLOGICAL SYSTEMS (ELEGANT HORIZONTAL SECTION)
+          ========================================================================= */}
+      <section className="section" id="astrological-systems" style={{ background: 'radial-gradient(circle at 50% 50%, rgba(11,31,77,0.45) 0%, #050a17 80%)' }}>
         <div className="container">
           <div className="section-header">
-            <div className="gold-badge">Simple & Seamless</div>
-            <h2 className="section-title">How Online Consultation <span class="gold-gradient-text">Works Worldwide</span></h2>
+            <div className="gold-badge">Approach &amp; Methodology</div>
+            <h2 className="section-title">Integrated <span className="gold-gradient-text">Astrological Systems</span></h2>
             <p className="section-subtitle">
-              Experience world-class astrological consultation from anywhere across the globe in 5 simple steps.
+              Sanjeev Naryani utilizes a multidisciplinary approach, blending time-tested disciplines for balanced and comprehensive answers.
             </p>
           </div>
 
-          <div className="process-grid">
-            <div className="glass-card process-step-card">
-              <div className="process-step-number">1</div>
-              <div className="process-step-icon">💬</div>
-              <h3 className="process-step-title">Contact on WhatsApp</h3>
-              <p className="process-step-desc">
-                Message +91 9619885158 or submit the booking form to initiate your worldwide consultation.
-              </p>
-            </div>
+          <div className="systems-horizontal-grid">
+            {astroSystems.map((sys, idx) => (
+              <div key={idx} className="system-card">
+                <span className="system-icon">{sys.icon}</span>
+                <h3 style={{ fontSize: '1.2rem', color: 'var(--gold-light)', marginBottom: '0.35rem' }}>{sys.title}</h3>
+                <span style={{ display: 'inline-block', fontSize: '0.76rem', color: 'var(--text-gold)', fontWeight: 600, marginBottom: '0.75rem' }}>
+                  {sys.badge}
+                </span>
+                <p style={{ fontSize: '0.86rem', lineHeight: 1.55, color: 'var(--text-muted)', margin: 0 }}>
+                  {sys.desc}
+                </p>
+              </div>
+            ))}
+          </div>
 
-            <div className="glass-card process-step-card">
-              <div className="process-step-number">2</div>
-              <div className="process-step-icon">📜</div>
-              <h3 className="process-step-title">Share Birth Details</h3>
-              <p className="process-step-desc">
-                Provide your Date of Birth, exact Time of Birth, and Place of Birth for accurate horoscope charting.
-              </p>
-            </div>
+          <div style={{ textAlign: 'center', marginTop: '2.5rem' }}>
+            <Link to="/services" className="btn btn-outline">
+              <span>🔮</span> <span>Explore All Services &amp; Methodologies →</span>
+            </Link>
+          </div>
+        </div>
+      </section>
 
-            <div className="glass-card process-step-card">
-              <div className="process-step-number">3</div>
-              <div className="process-step-icon">🔍</div>
-              <h3 className="process-step-title">Choose Service</h3>
-              <p className="process-step-desc">
-                Select Lal Kitab, Vedic Astrology, Numerology, Gemology, Vastu, or comprehensive life guidance.
-              </p>
-            </div>
+      {/* =========================================================================
+          7. CONSULTATION PROCESS (THE 6-STEP CONSULTATION JOURNEY)
+          ========================================================================= */}
+      <section className="section" id="consultation-process">
+        <div className="container">
+          <div className="section-header">
+            <div className="gold-badge">Simple &amp; Transparent</div>
+            <h2 className="section-title">Your 6-Step <span className="gold-gradient-text">Consultation Journey</span></h2>
+            <p className="section-subtitle">
+              Experience seamless, secure online astrological guidance in six clear steps.
+            </p>
+          </div>
 
-            <div className="glass-card process-step-card">
-              <div className="process-step-number">4</div>
-              <div className="process-step-icon">🎧</div>
-              <h3 className="process-step-title">Receive Guidance</h3>
-              <p className="process-step-desc">
-                Engage in a dedicated online consultation session via WhatsApp voice call, video call, or detailed voice report.
-              </p>
-            </div>
-
-            <div className="glass-card process-step-card">
-              <div className="process-step-number">5</div>
-              <div className="process-step-icon">📿</div>
-              <h3 className="process-step-title">Get Remedies & Solutions</h3>
-              <p className="process-step-desc">
-                Receive your customized, practical upaye with clear instructions for daily life and spiritual peace.
-              </p>
-            </div>
+          <div className="journey-steps-grid">
+            {journeySteps.map((stepItem, idx) => (
+              <div key={idx} className="glass-card journey-step-card">
+                <div className="journey-step-number-badge">{stepItem.step}</div>
+                <h3 style={{ fontSize: '1.18rem', color: 'var(--gold-light)', marginBottom: '0.5rem' }}>
+                  {stepItem.title}
+                </h3>
+                <p style={{ fontSize: '0.88rem', lineHeight: 1.6, color: 'var(--text-muted)', margin: 0 }}>
+                  {stepItem.desc}
+                </p>
+              </div>
+            ))}
           </div>
 
           <div style={{ textAlign: 'center', marginTop: '3rem' }}>
-            <a
-              href="https://wa.me/919619885158?text=Hello%20Naryani%20Astro%2C%20I%20would%20like%20to%20book%20an%20online%20consultation."
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-whatsapp btn-lg btn-shimmer"
+            <button
+              type="button"
+              className="btn btn-primary btn-lg btn-shimmer"
+              onClick={() => openBookingModal('Online Consultation Journey')}
             >
-              <span>💬</span> <span>Start Consultation on WhatsApp</span>
-            </a>
+              <span>🗓️</span> <span>Start Your Consultation Journey Now</span>
+            </button>
           </div>
         </div>
       </section>
 
-      {/* WHY CHOOSE US */}
-      <section className="section" style={{ background: 'rgba(6,13,33,0.5)' }}>
+      {/* =========================================================================
+          8. TESTIMONIALS (CLIENT-FOCUSED + PROVISION TO ADD MORE LATER)
+          ========================================================================= */}
+      <section className="section" id="testimonials" style={{ background: 'rgba(6, 13, 33, 0.5)' }}>
         <div className="container">
           <div className="section-header">
-            <div className="gold-badge">Our Pillars of Trust</div>
-            <h2 className="section-title">Why Choose <span className="gold-gradient-text">Naryani Astro</span></h2>
+            <div className="gold-badge">Client Trust &amp; Reviews</div>
+            <h2 className="section-title">Client Experiences from <span className="gold-gradient-text">India &amp; Worldwide</span></h2>
             <p className="section-subtitle">
-              Committed to authenticity, compassionate listening, and practical astrological solutions.
-            </p>
-          </div>
-
-          <div className="why-choose-grid">
-            <div className="glass-card why-choose-card">
-              <div className="why-icon">🔮</div>
-              <h3 className="why-card-title">Personalized Consultation</h3>
-              <p className="why-card-desc">Every reading is tailored specifically to your unique planetary combinations, life phase, and personal concerns.</p>
-            </div>
-
-            <div className="glass-card why-choose-card">
-              <div className="why-icon">🌍</div>
-              <h3 className="why-card-title">Online Worldwide Service</h3>
-              <p className="why-card-desc">Flexible scheduling for clients in different time zones across India, USA, UK, UAE, Canada, and Europe.</p>
-            </div>
-
-            <div className="glass-card why-choose-card">
-              <div className="why-icon">📚</div>
-              <h3 className="why-card-title">Multiple Disciplines</h3>
-              <p className="why-card-desc">Holistic synthesis of Lal Kitab, Vedic Astrology, Numerology, Gemology, and Vastu Shastra for complete clarity.</p>
-            </div>
-
-            <div className="glass-card why-choose-card">
-              <div className="why-icon">📿</div>
-              <h3 className="why-card-title">Practical Remedies</h3>
-              <p className="why-card-desc">Non-superstitious upaye focused on realistic actions, ethical lifestyle alignments, and genuine peace of mind.</p>
-            </div>
-
-            <div className="glass-card why-choose-card">
-              <div className="why-icon">⚡</div>
-              <h3 className="why-card-title">Easy WhatsApp Booking</h3>
-              <p className="why-card-desc">Instant booking with quick confirmation directly through WhatsApp with no complicated scheduling friction.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* TESTIMONIALS */}
-      <section className="section" id="testimonials">
-        <div className="container">
-          <div className="section-header">
-            <div className="gold-badge">Client Experiences</div>
-            <h2 className="section-title">Words of Trust from <span className="gold-gradient-text">Around the World</span></h2>
-            <p className="section-subtitle">
-              Feedback from seekers who consulted Naryani Astro online for relationship, career, and life remedies.
+              Real feedback from individuals and families who consulted Sanjeev Naryani for career, business, and personal remedies.
             </p>
           </div>
 
@@ -1037,14 +612,14 @@ _I would like to confirm my worldwide online consultation slot._`;
               <div>
                 <div className="testimonial-stars">★★★★★</div>
                 <p className="testimonial-quote">
-                  "The Lal Kitab remedies provided for my career stagnation were very simple and practical. Within weeks after doing the suggested upaye, unexpected new projects opened up. Truly grateful for the authentic guidance!"
+                  "Sanjeev Ji’s corporate leadership background makes all the difference. He understood my senior executive career crossroads immediately. The Lal Kitab remedies were practical and completely changed my trajectory within three months."
                 </p>
               </div>
               <div className="testimonial-client">
                 <div className="client-avatar">R.K.</div>
                 <div className="client-info-block">
                   <h4>R. K.</h4>
-                  <p>Online Client • Mumbai, India</p>
+                  <p>Senior VP • Mumbai, India (Career Consultation)</p>
                 </div>
               </div>
             </div>
@@ -1053,14 +628,14 @@ _I would like to confirm my worldwide online consultation slot._`;
               <div>
                 <div className="testimonial-stars">★★★★★</div>
                 <p className="testimonial-quote">
-                  "Consulting from London via WhatsApp was completely smooth. The birth chart analysis was deeply accurate regarding my marriage timeline and past events. No fear-mongering, just calm and clear direction."
+                  "Consulting online from London via WhatsApp was clear and unhurried. The birth chart reading on marriage timing and relationship dynamics was spot on, without any fear-mongering or costly rituals."
                 </p>
               </div>
               <div className="testimonial-client">
                 <div className="client-avatar">S.M.</div>
                 <div className="client-info-block">
                   <h4>S. M.</h4>
-                  <p>Online Consultation • London, UK</p>
+                  <p>Online Client • London, UK (Marriage &amp; Kundli)</p>
                 </div>
               </div>
             </div>
@@ -1069,33 +644,106 @@ _I would like to confirm my worldwide online consultation slot._`;
               <div>
                 <div className="testimonial-stars">★★★★★</div>
                 <p className="testimonial-quote">
-                  "The numerology and gemstone guidance for my business was an eye-opener. Changing my business card spelling and following the Vastu directions for my office brought immense peace and team harmony."
+                  "The business numerology and office Vastu recommendations brought immediate harmony to my partnership in Dubai. His pragmatic advice helped us avoid a major contractual conflict."
                 </p>
               </div>
               <div className="testimonial-client">
                 <div className="client-avatar">A.P.</div>
                 <div className="client-info-block">
                   <h4>A. P.</h4>
-                  <p>Online Consultation • Dubai, UAE</p>
+                  <p>Business Owner • Dubai, UAE (Business &amp; Vastu)</p>
                 </div>
               </div>
             </div>
           </div>
 
-          <div style={{ textAlign: 'center', marginTop: '2.5rem' }}>
-            <Link to="/testimonials" className="btn btn-outline">Read More Client Experiences →</Link>
+          {/* Dedicated Testimonial Provision Slots (Ready for adding customer reviews later) */}
+          <div className="testimonial-provision-box">
+            <div className="gold-badge" style={{ marginBottom: '0.4rem' }}>Testimonials Space</div>
+            <h3 style={{ fontSize: '1.25rem', color: 'var(--gold-light)', margin: '0.4rem 0' }}>
+              Testimonials
+            </h3>
+            <div style={{ color: 'var(--text-muted)', fontSize: '0.88rem', maxWidth: '650px', margin: '0 auto' }}>
+              Additional client testimonials are being curated from recent consultation sessions and will be featured here:
+            </div>
+
+            <div className="testimonial-provision-slots">
+              <div className="provision-slot-card">
+                <span style={{ fontSize: '1.4rem', marginBottom: '0.35rem' }}>💬</span>
+                <strong style={{ color: 'var(--gold-light)' }}>- Client Feedback Slot 1 -</strong>
+                <p style={{ margin: '0.35rem 0 0 0', fontSize: '0.8rem' }}>Verified online consultation review</p>
+              </div>
+              <div className="provision-slot-card">
+                <span style={{ fontSize: '1.4rem', marginBottom: '0.35rem' }}>💬</span>
+                <strong style={{ color: 'var(--gold-light)' }}>- Client Feedback Slot 2 -</strong>
+                <p style={{ margin: '0.35rem 0 0 0', fontSize: '0.8rem' }}>Verified online consultation review</p>
+              </div>
+              <div className="provision-slot-card">
+                <span style={{ fontSize: '1.4rem', marginBottom: '0.35rem' }}>💬</span>
+                <strong style={{ color: 'var(--gold-light)' }}>- Client Feedback Slot 3 -</strong>
+                <p style={{ margin: '0.35rem 0 0 0', fontSize: '0.8rem' }}>Verified online consultation review</p>
+              </div>
+            </div>
+
+            <div style={{ marginTop: '1.5rem' }}>
+              <a
+                href="https://wa.me/919619885158?text=Hello%20Sanjeev%20Ji%2C%20I%20would%20like%20to%20submit%20my%20consultation%20feedback."
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-outline btn-sm"
+              >
+                <span>✍️</span> <span>Share Your Consultation Feedback</span>
+              </a>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* FAQ SECTION */}
+      {/* =========================================================================
+          9. YOUTUBE & COMMUNITY
+          ========================================================================= */}
+      <section className="section" id="community" style={{ paddingTop: '2rem', paddingBottom: '3rem' }}>
+        <div className="container">
+          <div className="section-header" style={{ marginBottom: '2rem' }}>
+            <div className="gold-badge">Spiritual Wisdom &amp; Community</div>
+            <h2 className="section-title">Connect with <span className="gold-gradient-text">Naryani Astro</span></h2>
+            <p className="section-subtitle">
+              Subscribe to our YouTube channel and follow our social handles for regular insights on astrology, planetary shifts, and practical upaye.
+            </p>
+          </div>
+
+          <div className="social-grid">
+            <a href="https://youtube.com/@naryaniastro" target="_blank" rel="noopener noreferrer" className="glass-card social-card">
+              <div className="social-icon-circle youtube">▶️</div>
+              <div className="social-info-block">
+                <h3>YouTube Channel</h3>
+                <p>@naryaniastro</p>
+                <span className="btn btn-outline btn-sm">Subscribe on YouTube →</span>
+              </div>
+            </a>
+
+            <a href="https://instagram.com/naryani_astro" target="_blank" rel="noopener noreferrer" className="glass-card social-card">
+              <div className="social-icon-circle instagram">📸</div>
+              <div className="social-info-block">
+                <h3>Instagram Updates</h3>
+                <p>@naryani_astro</p>
+                <span className="btn btn-outline btn-sm">Follow on Instagram →</span>
+              </div>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* =========================================================================
+          10. FREQUENTLY ASKED QUESTIONS (SMART REPLIES TO 7 QUESTIONS)
+          ========================================================================= */}
       <section className="section" id="faq">
         <div className="container">
           <div className="section-header">
             <div className="gold-badge">Frequently Asked Questions</div>
             <h2 className="section-title">Common Questions About <span className="gold-gradient-text">Our Consultations</span></h2>
             <p className="section-subtitle">
-              Find answers to common questions about booking, birth details, worldwide consultations, and remedies.
+              Clear answers regarding our consultation process, birth details, online sessions, and remedies.
             </p>
           </div>
 
@@ -1108,9 +756,10 @@ _I would like to confirm my worldwide online consultation slot._`;
                     type="button"
                     className="faq-question-btn"
                     onClick={() => setActiveFaq(isActive ? -1 : index)}
+                    aria-expanded={isActive}
                   >
                     <span>{faq.q}</span>
-                    <span className="faq-indicator">+</span>
+                    <span className="faq-indicator">{isActive ? '−' : '+'}</span>
                   </button>
                   <div className="faq-answer">
                     <p>{faq.a}</p>
@@ -1122,22 +771,26 @@ _I would like to confirm my worldwide online consultation slot._`;
         </div>
       </section>
 
-      {/* BOOKING / CONTACT SECTION */}
-      <section className="section" id="contact" style={{ background: 'radial-gradient(circle at 70% 30%, rgba(11,31,77,0.6) 0%, #050a17 80%)' }}>
+      {/* =========================================================================
+          11. FINAL BOOKING CTA & CONTACT
+          ========================================================================= */}
+      <section className="section" id="contact" style={{ background: 'radial-gradient(circle at 70% 30%, rgba(11,31,77,0.65) 0%, #050a17 80%)' }}>
         <div className="container">
           <div className="section-header">
             <div className="gold-badge">Book Online Consultation</div>
-            <h2 className="section-title">Schedule Your <span className="gold-gradient-text">Astrology Consultation</span></h2>
+            <h2 className="section-title">Schedule Your <span className="gold-gradient-text">Consultation with Sanjeev Naryani</span></h2>
             <p className="section-subtitle">
-              Fill in your birth details below to submit your consultation request directly via WhatsApp or email.
+              Fill in your birth details below to submit your consultation request securely via WhatsApp, Razorpay, or phone.
             </p>
           </div>
 
           <div className="booking-section-grid">
-            {/* Contact Info Left Panel */}
+            {/* Contact Information Panel */}
             <div className="contact-info-panel">
               <div className="glass-card contact-info-card">
-                <h3 style={{ fontSize: '1.45rem', marginBottom: '0.5rem', color: 'var(--gold-light)' }}>Naryani Astro</h3>
+                <h3 style={{ fontSize: '1.45rem', marginBottom: '0.4rem', color: 'var(--gold-light)' }}>
+                  Naryani Astro
+                </h3>
                 <p style={{ fontSize: '0.88rem', color: 'var(--text-gold)', marginBottom: '1.5rem' }}>
                   Ancient Wisdom • Modern Solutions • Worldwide Online Astrology
                 </p>
@@ -1152,7 +805,7 @@ _I would like to confirm my worldwide online consultation slot._`;
                   </a>
 
                   <a
-                    href="https://wa.me/919619885158?text=Hello%20Naryani%20Astro%2C%20I%20would%20like%20to%20book%20an%20online%20astrology%20consultation."
+                    href="https://wa.me/919619885158?text=Hello%20Sanjeev%20Ji%2C%20I%20would%20like%20to%20book%20an%20online%20astrology%20consultation."
                     target="_blank"
                     rel="noopener noreferrer"
                     className="contact-channel-item"
@@ -1176,22 +829,24 @@ _I would like to confirm my worldwide online consultation slot._`;
                     <div className="contact-channel-icon">🌍</div>
                     <div className="channel-detail-text">
                       <h5>Consultation Mode</h5>
-                      <p>Worldwide Online (WhatsApp, Call, Zoom)</p>
+                      <p>Worldwide Online (WhatsApp, Voice, Video)</p>
                     </div>
                   </div>
                 </div>
 
                 <div style={{ paddingTop: '1rem', borderTop: '1px solid rgba(212,175,55,0.2)' }}>
-                  <p style={{ fontSize: '0.85rem', color: 'var(--text-subtle)' }}>
-                    🕒 Available for scheduled consultations across Indian Standard Time (IST), US Time Zones (EST/PST), UK (GMT), and Gulf Time (GST).
+                  <p style={{ fontSize: '0.85rem', color: 'var(--text-subtle)', margin: 0 }}>
+                    🕒 Flexible appointments available across IST, US (EST/PST), UK (GMT), UAE (GST), and Australian time zones.
                   </p>
                 </div>
               </div>
             </div>
 
-            {/* Booking Form Box */}
+            {/* Direct Booking Form */}
             <div className="glass-card booking-form-box">
-              <h3 style={{ fontSize: '1.5rem', marginBottom: '1.25rem' }}>Enter Your Birth Details</h3>
+              <h3 style={{ fontSize: '1.45rem', marginBottom: '1.25rem', color: 'var(--gold-light)' }}>
+                Enter Your Consultation Details
+              </h3>
 
               <form className="astrology-booking-form" onSubmit={handleHomeFormSubmit}>
                 <div className="form-grid-2">
@@ -1245,19 +900,20 @@ _I would like to confirm my worldwide online consultation slot._`;
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label">Consultation Type *</label>
+                  <label className="form-label">Consultation Focus Area *</label>
                   <select
                     className="form-select"
                     value={homeForm.service}
                     onChange={(e) => setHomeForm({ ...homeForm, service: e.target.value })}
                   >
-                    <option value="Lal Kitab Consultation">Lal Kitab Consultation (Horoscope & Upaye)</option>
-                    <option value="Vedic Astrology Consultation">Vedic Astrology Consultation (Chart Analysis)</option>
-                    <option value="Numerology Consultation">Numerology Consultation (Name & Numbers)</option>
-                    <option value="Gemology Consultation">Gemology Consultation (Gemstone Guidance)</option>
-                    <option value="Vastu Consultation">Vastu Consultation (Home & Business)</option>
-                    <option value="Astro Remedies & Solutions">Astro Remedies & Solutions (Life Challenges)</option>
-                    <option value="Comprehensive Life Reading">Comprehensive Multi-Discipline Reading</option>
+                    <option value="Career & Executive Guidance">Career Guidance &amp; Executive Decisions</option>
+                    <option value="Business Strategy & Timing">Business Strategy &amp; Expansion Timing</option>
+                    <option value="Marriage & Kundli Milan">Marriage &amp; Relationship Harmony (Kundli Milan)</option>
+                    <option value="Family & Generational Guidance">Family &amp; Generational Well-Being</option>
+                    <option value="Lal Kitab Horoscope & Upaye">Lal Kitab Consultation &amp; Practical Upaye</option>
+                    <option value="Vastu Shastra Consultation">Vastu Shastra (Home &amp; Commercial)</option>
+                    <option value="Numerology & Name Correction">Numerology Consultation &amp; Name Alignment</option>
+                    <option value="Comprehensive Multi-System Reading">Comprehensive Life Consultation</option>
                   </select>
                 </div>
 
@@ -1289,7 +945,7 @@ _I would like to confirm my worldwide online consultation slot._`;
                   <input
                     type="text"
                     className="form-input"
-                    placeholder="e.g. Jaipur, Rajasthan, India"
+                    placeholder="e.g. Mumbai, Maharashtra, India"
                     value={homeForm.place}
                     onChange={(e) => setHomeForm({ ...homeForm, place: e.target.value })}
                     required
@@ -1300,7 +956,7 @@ _I would like to confirm my worldwide online consultation slot._`;
                   <label className="form-label">Key Concerns or Questions</label>
                   <textarea
                     className="form-textarea"
-                    placeholder="Describe your primary questions (e.g., career switch timing, marriage compatibility, financial remedies)..."
+                    placeholder="Briefly state your primary concerns or questions (e.g., career switch timing, business partnership, marriage, family peace)..."
                     value={homeForm.message}
                     onChange={(e) => setHomeForm({ ...homeForm, message: e.target.value })}
                   ></textarea>
@@ -1310,10 +966,13 @@ _I would like to confirm my worldwide online consultation slot._`;
                   <button type="submit" className="btn btn-whatsapp btn-lg btn-shimmer">
                     <span>💬</span> <span>Book via WhatsApp Consultation</span>
                   </button>
-                  <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center' }}>
-                    <a href="tel:+919619885158" className="btn btn-call btn-sm">📞 Call +91 9619885158</a>
-                    <a href="mailto:goldenastro121@gmail.com" className="btn btn-outline btn-sm">📧 Email Us</a>
-                  </div>
+                  <button
+                    type="button"
+                    className="btn btn-primary btn-lg"
+                    onClick={() => openBookingModal(homeForm.service)}
+                  >
+                    <span>💳</span> <span>Pay &amp; Book via Razorpay</span>
+                  </button>
                 </div>
               </form>
             </div>
@@ -1321,36 +980,81 @@ _I would like to confirm my worldwide online consultation slot._`;
         </div>
       </section>
 
-      {/* SOCIAL MEDIA SECTION */}
-      <section className="section" style={{ paddingTop: '1rem', paddingBottom: '4rem' }}>
-        <div className="container">
-          <div className="section-header" style={{ marginBottom: '2rem' }}>
-            <div className="gold-badge">Follow & Connect</div>
-            <h2 className="section-title">Join Our <span className="gold-gradient-text">Spiritual Community</span></h2>
-            <p className="section-subtitle">Stay connected for daily astrological insights, Lal Kitab upaye, and celestial updates.</p>
-          </div>
+      {/* =========================================================================
+          12. DETAILED BIOGRAPHY MODAL (KNOW MORE ABOUT SANJEEV NARYANI)
+          ========================================================================= */}
+      {isBioModalOpen && (
+        <div className="bio-modal-overlay active" onClick={() => setIsBioModalOpen(false)}>
+          <div className="bio-modal-container" onClick={(e) => e.stopPropagation()}>
+            <button
+              type="button"
+              className="modal-close-btn"
+              onClick={() => setIsBioModalOpen(false)}
+              aria-label="Close Bio Modal"
+            >
+              &times;
+            </button>
 
-          <div className="social-grid">
-            <a href="https://instagram.com/naryani_astro" target="_blank" rel="noopener noreferrer" className="glass-card social-card">
-              <div className="social-icon-circle instagram">📸</div>
-              <div className="social-info-block">
-                <h3>Instagram</h3>
-                <p>@naryani_astro</p>
-                <span className="btn btn-outline btn-sm">Follow on Instagram →</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
+              <img
+                src="/assets/images/sanjeev_naryani_portrait.jpg"
+                alt="Sanjeev Naryani"
+                style={{
+                  width: '84px',
+                  height: '84px',
+                  borderRadius: '50%',
+                  border: '2px solid var(--gold-primary)',
+                  objectFit: 'cover'
+                }}
+              />
+              <div>
+                <div className="gold-badge" style={{ marginBottom: '0.25rem' }}>
+                  Distinguished Astrologer &amp; Corporate Leader
+                </div>
+                <h3 style={{ fontSize: '1.6rem', color: 'var(--gold-light)', margin: 0 }}>
+                  About Sanjeev Naryani
+                </h3>
+                <p style={{ color: 'var(--text-gold)', fontSize: '0.88rem', margin: '2px 0 0 0' }}>
+                  Jyotish Acharya (Bharatiya Vidya Bhavan) | 42 Years Corporate Leadership
+                </p>
               </div>
-            </a>
+            </div>
 
-            <a href="https://youtube.com/@naryaniastro" target="_blank" rel="noopener noreferrer" className="glass-card social-card">
-              <div className="social-icon-circle youtube">▶️</div>
-              <div className="social-info-block">
-                <h3>YouTube Channel</h3>
-                <p>@naryaniastro</p>
-                <span className="btn btn-outline btn-sm">Subscribe on YouTube →</span>
-              </div>
-            </a>
+            <div style={{ fontSize: '0.98rem', lineHeight: 1.8, color: 'var(--text-muted)' }}>
+              <p style={{ marginBottom: '1.1rem' }}>
+                Sanjeev Naryani is a distinguished professional who rose steadily through the ranks to reach the highest levels of corporate leadership, serving as Managing Director &amp; CEO in a company counted among the best in India. Alongside his corporate journey, he nurtured a deep passion for astrology from childhood, which eventually led him to formally pursue a two-year Jyotish Acharya programme in Vedic Astrology from Bharatiya Vidya Bhavan.
+              </p>
+              <p style={{ marginBottom: '1.1rem' }}>
+                His learning and practice continued thereafter across Vedic Astrology, Lal Kitab, Numerology, BNN and Vastu, allowing him to develop a distinctive, practical and holistic approach to astrological guidance. Over the years, his understanding of astrological principles and remedies has helped hundreds of families and individuals navigate periods of relationship distress, personal challenges and life uncertainty, bringing greater peace, harmony and prosperity into their lives.
+              </p>
+              <p style={{ marginBottom: '1.25rem' }}>
+                His Astro-Remedies are a perfect blend of Vedic, Lal Kitab and Numerology. He has also guided clients in India and across the world in making informed choices regarding names and numerological alignment, with an approach that combines traditional wisdom with practical understanding of modern life.
+              </p>
+            </div>
+
+            <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', marginTop: '1.5rem', borderTop: '1px solid var(--gold-border)', paddingTop: '1.25rem' }}>
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={() => {
+                  setIsBioModalOpen(false);
+                  openBookingModal('Consultation with Sanjeev Naryani');
+                }}
+              >
+                <span>🗓️</span> <span>Book Consultation</span>
+              </button>
+              <a
+                href="https://wa.me/919619885158?text=Hello%20Sanjeev%20Ji%2C%20I%20would%20like%20to%20schedule%20an%20astrological%20consultation."
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-whatsapp"
+              >
+                <span>💬</span> <span>Inquire via WhatsApp</span>
+              </a>
+            </div>
           </div>
         </div>
-      </section>
+      )}
     </main>
   );
 }

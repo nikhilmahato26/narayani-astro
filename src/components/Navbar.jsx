@@ -53,15 +53,15 @@ export default function Navbar() {
           <Link to="/" className="brand-logo-wrap" title="Naryani Astro - Sanjeev Naryani">
             <img src="/assets/images/logo.jpg" alt="Naryani Astro Logo" className="brand-logo-img" />
             <div className="brand-text-block">
-              <span className="brand-name">Naryani Astro</span>
-              <span className="brand-tagline">Ancient Wisdom • Modern Solutions</span>
+              <span className="brand-name">NARYANI ASTRO</span>
+              <span className="brand-tagline desktop-only">Ancient Wisdom • Modern Solutions</span>
             </div>
           </Link>
 
           {/* Desktop Navigation Menu */}
           <nav className="nav-menu" aria-label="Main Navigation">
             <NavLink to="/" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} end>Home</NavLink>
-            <NavLink to="/about" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>About</NavLink>
+            <NavLink to="/about" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>Meet Sanjeev Naryani</NavLink>
 
             {/* Services Dropdown */}
             <div className="nav-item-dropdown">
@@ -127,17 +127,17 @@ export default function Navbar() {
               href="https://wa.me/919619885158?text=Hello%20Naryani%20Astro%2C%20I%20would%20like%20to%20book%20an%20online%20astrology%20consultation."
               target="_blank"
               rel="noopener noreferrer"
-              className="btn btn-whatsapp btn-sm btn-shimmer"
+              className="btn btn-whatsapp btn-sm header-action-btn"
               title="Chat on WhatsApp"
             >
               <span className="btn-icon">💬</span> <span className="btn-text">WhatsApp</span>
             </a>
             <button
               type="button"
-              className="btn btn-primary btn-sm btn-shimmer"
+              className="btn btn-primary btn-sm header-action-btn"
               onClick={() => openBookingModal('General Consultation')}
             >
-              <span className="btn-icon">📅</span> <span className="btn-text">Book Now</span>
+              <span className="btn-icon">🗓️</span> <span className="btn-text">Book</span>
             </button>
             <button
               type="button"
@@ -181,7 +181,7 @@ export default function Navbar() {
             <span>Home</span> <span>→</span>
           </NavLink>
           <NavLink to="/about" className="mobile-nav-link" onClick={closeDrawer}>
-            <span>About Astrologer</span> <span>→</span>
+            <span>Meet Sanjeev Naryani</span> <span>→</span>
           </NavLink>
           <NavLink to="/services" className="mobile-nav-link" onClick={closeDrawer}>
             <span>All Services</span> <span>→</span>
