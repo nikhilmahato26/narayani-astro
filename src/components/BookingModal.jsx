@@ -13,7 +13,7 @@ export default function BookingModal() {
     phone: '',
     email: '',
     country: 'India',
-    service: modalService || 'Career & Executive Guidance',
+    service: modalService || 'Career',
     prefDate: '',
     prefTime: 'Morning (10 AM - 1 PM IST)',
     birthDate: '',
@@ -24,7 +24,21 @@ export default function BookingModal() {
 
   useEffect(() => {
     if (modalService) {
-      setFormData(prev => ({ ...prev, service: modalService }));
+      const genericTriggers = [
+        'Worldwide Online Consultation',
+        'Online Consultation Journey',
+        'Consultation with Sanjeev Naryani',
+        'About Page Consultation',
+        'Testimonials Page Consultation',
+        'General Consultation',
+        'Quick Mobile Booking',
+        'Services Catalog Booking'
+      ];
+      if (genericTriggers.includes(modalService)) {
+        setFormData(prev => ({ ...prev, service: 'Career' }));
+      } else {
+        setFormData(prev => ({ ...prev, service: modalService }));
+      }
     }
   }, [modalService]);
 
@@ -48,7 +62,7 @@ export default function BookingModal() {
 • *Phone:* ${formData.phone || 'Not Provided'}
 • *Email:* ${formData.email || 'Not Provided'}
 • *Country:* ${formData.country || 'India / Worldwide'}
-• *Consultation Type:* ${formData.service || 'Astrology Consultation'}
+• *Main Area of Concern:* ${formData.service || 'Career'}
 • *Preferred Date:* ${formData.prefDate || 'Earliest Available'}
 • *Preferred Slot:* ${formData.prefTime || 'Flexible'}
 • *Date of Birth:* ${formData.birthDate || 'Not Provided'}
@@ -106,7 +120,7 @@ _Please confirm my consultation session and dispatch instructions._`;
             6-Step Consultation Journey
           </div>
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap', fontSize: '0.75rem', color: 'var(--text-gold)' }}>
-            <span style={{ fontWeight: 600 }}>1. Select Service</span> → 
+            <span style={{ fontWeight: 600 }}>1. Select Concern</span> → 
             <span style={{ fontWeight: 600 }}>2. Date/Time</span> → 
             <span style={{ fontWeight: 600 }}>3. Birth Details</span> → 
             <span style={{ fontWeight: 600 }}>4. Razorpay Secure</span> → 
@@ -127,9 +141,9 @@ _Please confirm my consultation session and dispatch instructions._`;
             </div>
 
             <form className="astrology-booking-form" onSubmit={handleSubmit}>
-              {/* Step 1: Service */}
+              {/* Step 1: Concern & Service */}
               <div className="form-group">
-                <label className="form-label">1. Select Consultation *</label>
+                <label className="form-label">1. Select Consultation (Your Main Area of Concern) *</label>
                 <select
                   name="service"
                   className="form-select"
@@ -137,14 +151,25 @@ _Please confirm my consultation session and dispatch instructions._`;
                   onChange={handleChange}
                   required
                 >
-                  <option value="Career & Executive Guidance">Career Guidance &amp; Executive Decisions</option>
-                  <option value="Business Strategy & Timing">Business Strategy &amp; Expansion Timing</option>
-                  <option value="Marriage & Kundli Milan">Marriage &amp; Kundli Milan (Relationship Harmony)</option>
-                  <option value="Family & Generational Guidance">Family &amp; Generational Harmony</option>
-                  <option value="Lal Kitab Horoscope & Upaye">Lal Kitab Consultation &amp; Upaye</option>
-                  <option value="Vastu Shastra Consultation">Vastu Shastra (Home &amp; Commercial)</option>
-                  <option value="Numerology Consultation">Numerology &amp; Name Alignment</option>
-                  <option value="Comprehensive Life Reading">Comprehensive Multi-System Life Reading</option>
+                  <optgroup label="Your Main Area of Concern">
+                    <option value="Career">Career</option>
+                    <option value="Relationship">Relationship</option>
+                    <option value="Children">Children</option>
+                    <option value="Disputes">Disputes</option>
+                    <option value="Marital Harmony">Marital Harmony</option>
+                    <option value="Work-Life Balance">Work-Life Balance</option>
+                    <option value="Accidents">Accidents</option>
+                    <option value="Losses">Losses</option>
+                    <option value="Diseases">Diseases</option>
+                  </optgroup>
+                  <optgroup label="Specialized Astrological Disciplines">
+                    <option value="Lal Kitab Consultation">Lal Kitab Consultation &amp; Upaye</option>
+                    <option value="Vedic Astrology Consultation">Vedic Astrology Consultation</option>
+                    <option value="Vastu Shastra Consultation">Vastu Shastra (Home &amp; Commercial)</option>
+                    <option value="Numerology Consultation">Numerology &amp; Name Alignment</option>
+                    <option value="Gemology Consultation">Gemology &amp; Gemstone Guidance</option>
+                    <option value="Comprehensive Life Reading">Comprehensive Multi-System Life Reading</option>
+                  </optgroup>
                 </select>
               </div>
 

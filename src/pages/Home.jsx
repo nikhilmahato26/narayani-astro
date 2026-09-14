@@ -17,7 +17,7 @@ export default function Home() {
     phone: '',
     email: '',
     country: '',
-    service: 'Career & Executive Guidance',
+    service: 'Career',
     dob: '',
     time: '',
     place: '',
@@ -32,7 +32,7 @@ export default function Home() {
 • *Phone / WhatsApp:* ${homeForm.phone || 'Not Provided'}
 • *Email:* ${homeForm.email || 'Not Provided'}
 • *Country of Residence:* ${homeForm.country || 'India / Worldwide'}
-• *Consultation Type:* ${homeForm.service}
+• *Main Area of Concern:* ${homeForm.service}
 • *Date of Birth:* ${homeForm.dob || 'Not Provided'}
 • *Exact Birth Time:* ${homeForm.time || 'Not Provided'}
 • *Place of Birth:* ${homeForm.place || 'Not Provided'}
@@ -158,7 +158,7 @@ _I would like to confirm my consultation slot with Sanjeev Naryani._`;
     {
       step: '1',
       title: 'Select Consultation',
-      desc: 'Choose your area of focus: Career, Business, Lal Kitab, Vedic Astrology, Vastu, or Comprehensive Life Reading.'
+      desc: 'Your main area of Concern: Career, Relationship, Children, Disputes, Marital Harmony, Work-Life Balance, Accidents, Losses, Diseases, etc.'
     },
     {
       step: '2',
@@ -900,20 +900,22 @@ _I would like to confirm my consultation slot with Sanjeev Naryani._`;
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label">Consultation Focus Area *</label>
+                  <label className="form-label">Your Main Area of Concern *</label>
                   <select
                     className="form-select"
                     value={homeForm.service}
                     onChange={(e) => setHomeForm({ ...homeForm, service: e.target.value })}
                   >
-                    <option value="Career & Executive Guidance">Career Guidance &amp; Executive Decisions</option>
-                    <option value="Business Strategy & Timing">Business Strategy &amp; Expansion Timing</option>
-                    <option value="Marriage & Kundli Milan">Marriage &amp; Relationship Harmony (Kundli Milan)</option>
-                    <option value="Family & Generational Guidance">Family &amp; Generational Well-Being</option>
-                    <option value="Lal Kitab Horoscope & Upaye">Lal Kitab Consultation &amp; Practical Upaye</option>
-                    <option value="Vastu Shastra Consultation">Vastu Shastra (Home &amp; Commercial)</option>
-                    <option value="Numerology & Name Correction">Numerology Consultation &amp; Name Alignment</option>
-                    <option value="Comprehensive Multi-System Reading">Comprehensive Life Consultation</option>
+                    <option value="Career">Career</option>
+                    <option value="Relationship">Relationship</option>
+                    <option value="Children">Children</option>
+                    <option value="Disputes">Disputes</option>
+                    <option value="Marital Harmony">Marital Harmony</option>
+                    <option value="Work-Life Balance">Work-Life Balance</option>
+                    <option value="Accidents">Accidents</option>
+                    <option value="Losses">Losses</option>
+                    <option value="Diseases">Diseases</option>
+                    <option value="Comprehensive Multi-System Reading">Comprehensive Life Reading (All Concerns)</option>
                   </select>
                 </div>
 

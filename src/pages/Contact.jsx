@@ -10,7 +10,7 @@ export default function Contact() {
     phone: '',
     email: '',
     country: '',
-    service: 'Lal Kitab Consultation',
+    service: 'Career',
     dob: '',
     time: '',
     place: '',
@@ -25,7 +25,7 @@ export default function Contact() {
 • *Phone:* ${form.phone || 'Not Provided'}
 • *Email:* ${form.email || 'Not Provided'}
 • *Country:* ${form.country || 'India / Worldwide'}
-• *Consultation Type:* ${form.service}
+• *Main Area of Concern:* ${form.service}
 • *Date of Birth:* ${form.dob || 'Not Provided'}
 • *Birth Time:* ${form.time || 'Not Provided'}
 • *Birth Place:* ${form.place || 'Not Provided'}
@@ -196,19 +196,32 @@ _I would like to confirm my worldwide online consultation slot._`;
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label">Consultation Type *</label>
+                  <label className="form-label">Your Main Area of Concern *</label>
                   <select
                     className="form-select"
                     value={form.service}
                     onChange={(e) => setForm({ ...form, service: e.target.value })}
                   >
-                    <option value="Lal Kitab Consultation">Lal Kitab Consultation (Horoscope & Upaye)</option>
-                    <option value="Vedic Astrology Consultation">Vedic Astrology Consultation (Birth Chart)</option>
-                    <option value="Numerology Consultation">Numerology Consultation (Name & Numbers)</option>
-                    <option value="Gemology Consultation">Gemology Consultation (Gemstone Guidance)</option>
-                    <option value="Vastu Consultation">Vastu Consultation (Home & Business)</option>
-                    <option value="Astro Remedies & Solutions">Astro Remedies & Solutions (Life Challenges)</option>
-                    <option value="Comprehensive Multi-Discipline Reading">Comprehensive Multi-Discipline Reading</option>
+                    <optgroup label="Your Main Area of Concern">
+                      <option value="Career">Career</option>
+                      <option value="Relationship">Relationship</option>
+                      <option value="Children">Children</option>
+                      <option value="Disputes">Disputes</option>
+                      <option value="Marital Harmony">Marital Harmony</option>
+                      <option value="Work-Life Balance">Work-Life Balance</option>
+                      <option value="Accidents">Accidents</option>
+                      <option value="Losses">Losses</option>
+                      <option value="Diseases">Diseases</option>
+                    </optgroup>
+                    <optgroup label="Specialized Astrological Disciplines">
+                      <option value="Lal Kitab Consultation">Lal Kitab Consultation (Horoscope &amp; Upaye)</option>
+                      <option value="Vedic Astrology Consultation">Vedic Astrology Consultation (Birth Chart)</option>
+                      <option value="Numerology Consultation">Numerology Consultation (Name &amp; Numbers)</option>
+                      <option value="Gemology Consultation">Gemology Consultation (Gemstone Guidance)</option>
+                      <option value="Vastu Consultation">Vastu Consultation (Home &amp; Business)</option>
+                      <option value="Astro Remedies & Solutions">Astro Remedies &amp; Solutions (Life Challenges)</option>
+                      <option value="Comprehensive Multi-Discipline Reading">Comprehensive Multi-Discipline Reading</option>
+                    </optgroup>
                   </select>
                 </div>
 
