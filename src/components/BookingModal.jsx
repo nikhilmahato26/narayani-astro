@@ -81,11 +81,12 @@ _Please confirm my consultation session and dispatch instructions._`;
         setStep(2);
       }, 500);
     } else {
-      // Razorpay checkout flow simulation with automatic confirmation
+      // Razorpay checkout flow
       showToast('Initiating secure Razorpay checkout...');
       setTimeout(() => {
+        window.open('https://razorpay.me/@sanjeevnaryani', '_blank');
         setStep(2);
-        showToast('Payment confirmed! Consultation instructions generated.');
+        showToast('Payment initiated! Consultation instructions generated.');
       }, 1000);
     }
   };
